@@ -1,0 +1,85 @@
+1️⃣ Core Spring Boot Concepts
+✔ Spring vs Spring Boot – Key differences, advantages
+✔ Spring Boot Architecture – Auto-configuration, dependency injection
+✔ Spring Boot Starters – spring-boot-starter-web, spring-boot-starter-data-jpa
+✔ Spring Boot Annotations – @SpringBootApplication, @Component, @Service, @Repository, @Bean, etc.
+✔ Bean Lifecycle & Scope – @PostConstruct, @PreDestroy, Singleton vs Prototype
+✔ Dependency Injection (DI) – Constructor vs Setter injection
+✔ Profiles in Spring Boot – @Profile, application-dev.yml, application-prod.yml
+✔ Spring Boot Properties & Configuration – application.properties vs application.yml
+
+2️⃣ Spring Boot REST API Development
+✔ Building REST APIs – @RestController, @GetMapping, @PostMapping, @RequestBody
+✔ Path Variables & Query Parameters – @PathVariable, @RequestParam
+✔ Exception Handling – @ExceptionHandler, @ControllerAdvice
+✔ Response Handling – ResponseEntity<T>, HTTP Status Codes
+✔ Content Negotiation – JSON vs XML support
+✔ Global Exception Handling – @ControllerAdvice
+
+3️⃣ Spring Boot Data Access & JPA (Database Integration)
+✔ Spring Data JPA – @Entity, @Table, @Id, @GeneratedValue
+✔ CRUD Operations – JpaRepository, save(), findById(), deleteById()
+✔ Pagination & Sorting – Pageable, Sort
+✔ Named Queries & Native Queries – @Query, @NamedQuery
+✔ Transactions in Spring Boot – @Transactional
+✔ Spring Boot with MySQL/PostgreSQL
+✔ H2 Database (In-Memory DB for Testing)
+
+4️⃣ Spring Boot Security & Authentication
+✔ Spring Security Basics – Authentication & Authorization
+✔ JWT Authentication – Secure API with JWT
+✔ OAuth2 Authentication – Google, Facebook login
+✔ Role-Based Access Control (RBAC) – @PreAuthorize, @Secured
+✔ Security Filters & Custom Authentication Providers
+✔ Spring Boot with Keycloak (SSO Authentication)
+
+5️⃣ Spring Boot Caching
+✔ Spring Boot Cache Annotations – @Cacheable, @CachePut, @CacheEvict
+✔ Caching with Redis – Store API responses in Redis
+✔ In-Memory Caching – EhCache, Guava Cache
+
+6️⃣ Spring Boot Microservices
+✔ Building Microservices with Spring Boot
+✔ Service Discovery with Eureka
+✔ API Gateway with Spring Cloud Gateway
+✔ Spring Boot with Kafka & RabbitMQ (Event-Driven Architecture)
+✔ Circuit Breaker with Resilience4J
+✔ Inter-Service Communication – REST, Feign Client, WebClient
+✔ Spring Boot Distributed Tracing – Zipkin, Sleuth
+
+7️⃣ Spring Boot Testing & Unit Testing
+✔ Unit Testing with JUnit & Mockito – @MockBean, @InjectMocks
+✔ Integration Testing with Spring Boot – @SpringBootTest, TestRestTemplate
+✔ Mocking Dependencies – Mockito.when(), thenReturn()
+✔ Testing REST APIs – MockMvc, WebTestClient
+✔ Database Testing – @DataJpaTest, H2 Database
+
+8️⃣ Spring Boot Messaging (Kafka, RabbitMQ, WebSockets)
+✔ Spring Boot with Kafka – Kafka Producer & Consumer
+✔ Spring Boot with RabbitMQ – Message Queuing, Event Processing
+✔ Real-Time Event Processing – Kafka Streams, Spring Cloud Stream
+✔ Spring Boot WebSockets – Real-time chat applications
+
+9️⃣ Spring Boot Deployment & DevOps
+✔ Dockerizing a Spring Boot App – Writing Dockerfile, Building Images
+✔ Deploying Spring Boot with Kubernetes (K8s) – Creating k8s deployments
+✔ Spring Boot with CI/CD Pipelines – GitHub Actions, Jenkins
+✔ Spring Boot in AWS/GCP/Azure – Deploying to cloud platforms
+✔ Spring Boot with Config Server – Centralized configuration management
+
+🔟 Spring Boot Performance Optimization & Monitoring
+✔ Spring Boot Actuator – Monitoring & health checks (/actuator/health)
+✔ Spring Boot AOP (Aspect-Oriented Programming) – @Aspect, @Around, Logging Interceptors
+✔ Spring Boot Performance Optimization – Profiling with JVisualVM, Spring Boot Async
+✔ Spring Boot Metrics & Logging – Micrometer, Logback, @Slf4j
+
+🔹 Advanced Topics (For Senior & Architect Roles)
+✔ Spring Boot GraphQL – Query APIs using GraphQL instead of REST
+✔ Spring Boot Reactive Programming – WebFlux, Mono, Flux
+✔ Spring Boot Multi-Threading & Async – @Async, CompletableFuture
+✔ Spring Boot API Rate Limiting – Bucket4J, Redis Rate Limiter
+✔ Spring Boot Feature Flags – Togglz, FF4J
+
+
+
+

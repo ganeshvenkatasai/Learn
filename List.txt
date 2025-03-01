@@ -1,0 +1,93 @@
+// Online Java Compiler
+// Use this editor to write, compile and run your Java code online
+
+class Node<T>{
+    T val;
+    Node<T> next;
+    
+    Node(){}
+    Node(T val){
+        this.val = val;
+    }
+    
+    Node(T val, Node next){
+        this.val = val;
+        this.next = next;
+    }
+}
+
+interface List<T>{
+    void add(T val);
+    void display();
+    void addAtEnd(T val);
+    T getByIndex(int ind);
+}
+
+class LinkedList<T> implements List<T>{
+    
+    Node<T> head;
+    
+    LinkedList(T val){
+        add(val);
+    }
+    
+    LinkedList(T[] vals){
+        for(int i=0; i<vals.length; i++){
+            addAtEnd(vals[i]);
+        }
+    }
+    
+     public void add(T val){
+        Node<T> node = new Node<>(val);
+        if(head != null) {
+            node.next = head;
+        }
+        head = node;
+    }
+    
+    public void addAtEnd(T val){
+        if(head == null){
+            add(val);
+            return;
+        }
+        Node<T> node = new Node<>(val);
+        Node<T> temp = head;
+        while(temp.next != null){
+            temp = temp.next;
+        }
+        temp.next = node;
+    }
+    
+    public T getByIndex(int ind){
+        if(ind<0) return null;
+        Node<T> node = head;
+        for(int i=0; i<ind; i++){
+            if(node == null) return null;
+            node = node.next;
+        }
+        return node.val;
+    }
+    
+    public void display(){
+        Node<T> node = head;
+        while(node != null){
+            System.out.println(node.val + " ");
+            node = node.next;
+        }
+    }
+    
+}
+
+class Main {
+    
+    public static void main(String[] args) {
+        
+        List<Integer> l1 = new LinkedList<>(10);
+        l1.add(20);
+        List<Integer> l2 = new LinkedList<>(new Integer[]{1,2,3,4});
+        //l2.display();
+        System.out.println(l2.getByIndex(-100));
+        
+        
+    }
+}

@@ -1,0 +1,406 @@
+Java Collections Framework
+
+1. List (Interface) - Implementations: ArrayList, LinkedList, Vector, Stack
+add(E e): Adds an element to the end of the list.
+add(int index, E element): Inserts an element at the specified index.
+get(int index): Retrieves an element at the specified index.
+remove(int index): Removes the element at the specified index.
+remove(Object o): Removes the first occurrence of the specified object.
+set(int index, E element): Replaces the element at the specified index.
+contains(Object o): Return true if found.
+indexOf(Object o): Returns the index of the first occurrence of the specified element.
+lastIndexOf(Object o): Returns the index of the last occurrence of the specified element. If not found returns -1
+subList(int fromIndex, int toIndex): Returns a sublist between the specified indices.
+
+2. Set (Interface) - Implementations: HashSet, LinkedHashSet, TreeSet
+add(E e): Adds an element to the set.
+remove(Object o): Removes the specified element from the set.
+contains(Object o): Checks if the set contains the specified element.
+toArray(): Converts the set to an array.
+iterator(): Returns an iterator over the set.
+
+3. Queue (Interface) - Implementations: PriorityQueue, LinkedList, ArrayDeque
+add(E e): Adds an element to the queue (throws exception if full).
+offer(E e): Adds an element to the queue (returns false if full).
+remove(): Removes and returns the front element (throws exception if empty).
+poll(): Removes and returns the front element (returns null if empty).
+element(): Retrieves the front element (throws exception if empty).
+peek(): Retrieves the front element (returns null if empty).
+
+4. Deque (Interface) - Implementations: ArrayDeque, LinkedList
+addFirst(E e): Adds an element at the front of the deque.
+addLast(E e): Adds an element at the end of the deque.
+offerFirst(E e): Adds an element at the front of the deque (returns false if full).
+offerLast(E e): Adds an element at the end of the deque (returns false if full).
+removeFirst(): Removes and returns the front element.
+removeLast(): Removes and returns the last element.
+pollFirst(): Removes and returns the front element (returns null if empty).
+pollLast(): Removes and returns the last element (returns null if empty).
+getFirst(): Retrieves the front element (throws exception if empty).
+getLast(): Retrieves the last element (throws exception if empty).
+peekFirst(): Retrieves the front element (returns null if empty).
+peekLast(): Retrieves the last element (returns null if empty).
+
+5. Map (Interface) - Implementations: HashMap, LinkedHashMap, TreeMap, Hashtable
+put(K key, V value): Adds or updates a key-value pair in the map.
+putAll(Map<? extends K, ? extends V> m): Adds all entries from another map.
+get(Object key): Retrieves the value associated with the key.
+remove(Object key): Removes the key-value pair for the specified key.
+containsKey(Object key): Checks if the map contains the specified key.
+containsValue(Object value): Checks if the map contains the specified value.
+keySet(): Returns a set of all keys in the map.
+values(): Returns a collection of all values in the map.
+entrySet(): Returns a set of all key-value pairs in the map.
+
+Common methods :
+size(): Returns the number of entries.
+clear(): Removes all entries.
+isEmpty(): Return true if no entries present.
+
+1. Collection to Array
+String[] arr = list.toArray(new String[0]);  
+Integer[] arr = set.toArray(new Integer[0]);  
+Double[] arr = queue.toArray(new Double[0]);  
+Integer[] arr = map.keySet().toArray(new Integer[0]);  
+
+2. Array to Collection
+List<String> list = Arrays.asList(array);  
+Set<Integer> set = new HashSet<>(Arrays.asList(array));  
+Queue<Double> queue = new LinkedList<>(Arrays.asList(array));  
+
+3. Collection to Another Collection
+Set<String> set = new HashSet<>(list);  
+Queue<Integer> queue = new LinkedList<>(list);  
+List<Double> list = new ArrayList<>(set);  
+List<String> list = new ArrayList<>(queue);  
+
+4. Collection to Map
+Map<Integer, String> map = list.stream().collect(Collectors.toMap(obj -> obj.getId(), obj -> obj.getName()));  
+Map<Integer, String> map = IntStream.range(0, keys.size()).boxed().collect(Collectors.toMap(keys::get, values::get));  
+
+5. Map to Collection
+List<Integer> keyList = new ArrayList<>(map.keySet());  
+Set<String> valueSet = new HashSet<>(map.values());  
+List<Map.Entry<Integer, String>> entryList = new ArrayList<>(map.entrySet());  
+
+6. String to Collection
+List<String> list = Arrays.asList(str.split(","));  
+Set<String> set = new HashSet<>(Arrays.asList(str.split(",")));  
+
+7. Stream-Based Conversions
+Stream<String> stream = list.stream();  
+List<Integer> list = stream.collect(Collectors.toList());  
+String[] arr = stream.toArray(String[]::new);  
+
+
+String Methods:
+length() - Returns the length of the string.
+charAt(int index) - Returns the character at the specified index.
+substring(int beginIndex) - Returns a substring from the specified start index.
+substring(int beginIndex, int endIndex) - Returns a substring from the start index to the end index.
+contains(CharSequence sequence) - Returns true if the string contains the specified sequence.
+equals(Object anObject) - Compares the string to the specified object for equality.
+equalsIgnoreCase(String anotherString) - Compares the string to the specified string, ignoring case.
+compareTo(String anotherString) - Compares the string to the specified string lexicographically.
+compareToIgnoreCase(String str) - Compares the string to the specified string, ignoring case, lexicographically.
+startsWith(String prefix) - Returns true if the string starts with the specified prefix.
+endsWith(String suffix) - Returns true if the string ends with the specified suffix.
+indexOf(int ch) - Returns the index of the first occurrence of the specified character.
+indexOf(String str) - Returns the index of the first occurrence of the specified substring.
+lastIndexOf(int ch) - Returns the index of the last occurrence of the specified character.
+lastIndexOf(String str) - Returns the index of the last occurrence of the specified substring.
+replace(char oldChar, char newChar) - Returns a new string with all occurrences of oldChar replaced by newChar.
+replace(CharSequence target, CharSequence replacement) - Replaces each substring of the string that matches the literal target with the specified replacement.
+replaceAll(String regex, String replacement) - Replaces each substring of the string that matches the regex with the specified replacement.
+replaceFirst(String regex, String replacement) - Replaces the first substring of the string that matches the regex with the specified replacement.
+toLowerCase() - Converts all characters in the string to lowercase.
+toUpperCase() - Converts all characters in the string to uppercase.
+trim() - Removes leading and trailing whitespace from the string.
+split(String regex) - Splits the string around matches of the given regular expression.
+split(String regex, int limit) - Splits the string around matches of the given regular expression, with a limit on the number of splits.
+concat(String str) - Concatenates the specified string to the end of the current string.
+join(CharSequence delimiter, CharSequence... elements) - Joins the given elements with the specified delimiter.
+valueOf(int i) - Returns the string representation of the specified integer.
+toCharArray() - Converts the string into a new character array.
+isEmpty() - Returns true if the string is empty (length is 0).
+matches(String regex) - Returns true if the string matches the specified regular expression.
+regionMatches(int toffset, String other, int ooffset, int len) - Tests if two string regions are equal.
+regionMatches(boolean ignoreCase, int toffset, String other, int ooffset, int len) - Tests if two string regions are equal, with an option to ignore case.
+contains(CharSequence sequence) - Checks if the string contains the specified sequence of characters.
+format(String format, Object... args) - Returns a formatted string using the specified format and arguments.
+getBytes() - Encodes the string into a sequence of bytes using the platform's default charset.
+getBytes(Charset charset) - Encodes the string into a sequence of bytes using the specified charset.
+intern() - Returns a canonical representation of the string.
+toString() - Returns the string itself (overridden from Object).
+substring(int beginIndex) - Returns a substring from the specified start index to the end of the string.
+contentEquals(StringBuffer sb) - Compares the string to the specified StringBuffer for equality.
+hashCode() - Returns the hash code for the string.
+Common String Operations:
+Concatenation: String str3 = str1 + str2;
+StringBuilder (mutable strings): StringBuilder sb = new StringBuilder("Hello");
+String.format(): String formatted = String.format("Value: %d", 42);
+StringBuffer (synchronized mutable strings): StringBuffer sb = new StringBuffer("Hello");
+String Comparison: str1.equals(str2), str1.equalsIgnoreCase(str2)
+
+
+Indentations :
+int age = 25; 
+------------------------------------------------------------------
+int x = 10, y = 20, z = 30;
+------------------------------------------------------------------
+public class Example {
+    public static void main(String[] args) {
+        System.out.println("Hello, World!");
+    }
+}
+------------------------------------------------------------------
+for (int i = 0; i < 10; i++) {  
+    System.out.println("Iteration: " + i);
+}
+------------------------------------------------------------------
+if (x > 10) {
+    System.out.println("X is greater than 10");
+} else {
+    System.out.println("X is 10 or less");
+}
+------------------------------------------------------------------
+printDetails("Ganesh", 25, "India");
+------------------------------------------------------------------
+try {
+    int result = 10 / 0;
+} catch (ArithmeticException e) {
+    System.out.println("Cannot divide by zero");
+}
+------------------------------------------------------------------
+switch (day) {
+    case "Monday":
+        System.out.println("Start of the week!");
+        break;
+    case "Friday":
+        System.out.println("Weekend is near!");
+        break;
+    default:
+        System.out.println("Just another day!");
+}
+------------------------------------------------------------------
+public class Person {
+    private String name;
+    
+    public Person(String name) {
+        this.name = name;
+    }
+    
+    public void display() {
+        System.out.println("Name: " + name);
+    }
+}
+------------------------------------------------------------------
+public int getValue() {
+    return 100;
+}
+------------------------------------------------------------------
+for (int i = 0; i < 5; i++) {
+    if (i % 2 == 0) {
+        System.out.println(i + " is even");
+    }
+}
+------------------------------------------------------------------
+// This is a single-line comment
+
+/*
+ * This is a 
+ * properly formatted multi-line comment.
+ */
+------------------------------------------------------------------
+
+
+Order of Elements in a Java Class :
+Package Statement
+Import Statements
+Class Declaration
+Constants (static final)
+Instance Variables (private first, then protected, then public)
+Constructors
+Methods (ordered logically)
+Static methods first
+Instance methods next
+Private helper methods last
+Override toString(), equals(), hashCode() (if needed)
+Inner Classes (if any)
+------------------------------------------------------------------
+A class can extend only one parent class (extends). (Single Inheritance)
+A class can implement multiple interfaces (implements).
+If the class needs to declare exceptions, use throws in method signatures.
+public class ClassName extends ParentClass implements Interface1, Interface2 {
+    // Class body
+}
+------------------------------------------------------------------
+Order of variables in a class:
+Constants (static final)
+Static variables (static)
+Instance variables (private → protected → public)
+------------------------------------------------------------------
+Correct Order of Methods:
+Static Methods (Public → Private)
+Instance Methods (Public → Protected → Private)
+Override Methods (toString(), equals(), hashCode() last)
+Private helper methods last
+------------------------------------------------------------------
+extends must come before implements.
+Only one class can be extended, but multiple interfaces can be implemented.
+If implementing multiple interfaces, separate them with commas.
+public class Developer extends Employee implements Coder, Tester {
+    // Class body
+}
+------------------------------------------------------------------
+If a method might throw an exception, declare it using throws.
+throws must come before the method body.
+public void readFile(String fileName) throws IOException {
+    // File reading logic
+}
+
+------------------------------------------------------------------
+Final classes cannot be extended.
+Final methods cannot be overridden.
+public final class Utility {
+    public static void printMessage() {
+        System.out.println("Hello!");
+    }
+}
+------------------------------------------------------------------
+If your class has an inner class, keep it at the bottom of the outer class.
+public class OuterClass {
+    private int data = 10;
+
+    // Inner class
+    class InnerClass {
+        void display() {
+            System.out.println("Data: " + data);
+        }
+    }
+}
+------------------------------------------------------------------
+Only method signatures (no implementation).
+All methods are implicitly public abstract.
+All variables are implicitly public static final
+public interface Vehicle {
+    int MAX_SPEED = 120; // Implicitly public static final
+    void start(); // Implicitly public abstract
+}
+------------------------------------------------------------------
+Enum constants should be UPPER_CASE.
+Keep methods at the bottom.
+public enum Color {
+    RED, GREEN, BLUE;
+
+    public void display() {
+        System.out.println("Color: " + this);
+    }
+}
+------------------------------------------------------------------
+
+
+Order for Declaring Variables in a Class:
+Constants (static final):
+All static final constants should be at the top.
+They are usually written in UPPER_CASE with underscores (_) separating words.
+Example: public static final int MAX_COUNT = 100;
+Static Variables (static):
+Static variables (class-level variables) should come below constants.
+Example: private static int counter = 0;
+Instance Variables (Non-static):
+These are variables that belong to an object (not shared across instances).
+Order (general rule):
+Primitive types → Immutable objects (String) → Collections (Lists, Maps, Sets, Arrays, etc.) → Reference types (custom objects).
+Access modifiers order:
+Private → Protected → Public (Encapsulation principle)
+public class Example {
+
+    // Constants (static final)
+    public static final int MAX_USERS = 1000;
+    private static final String APP_NAME = "MyApp";
+
+    // Static Variables (shared across instances)
+    private static int totalUsers;
+    protected static double appVersion = 1.0;
+
+    // Instance Variables (Non-static)
+    
+    // Primitives (organized in size order)
+    private boolean isActive;
+    private byte status;
+    private short shortNumber;
+    private int userId;
+    private long bigNumber;
+    private float piValue;
+    private double balance;
+
+    // Immutable objects (`String`, `UUID`, etc.)
+    private String name;
+    private UUID userUUID;
+
+    // Collections (ordered by usage frequency)
+    private List<String> messages;
+    private Set<Integer> uniqueIds;
+    private Map<String, Integer> scores;
+
+    // Custom objects (Reference types)
+    private Address address;
+    private User friend;
+
+    // Constructor(s)
+    public Example(String name, int userId) {
+        this.name = name;
+        this.userId = userId;
+    }
+
+    // Methods...
+}
+------------------------------------------------------------------
+If multiple variables are logically related, group them together inside their category.
+public class Account {
+    private int accountId;
+    private double balance;
+
+    private String accountHolder;
+    private String bankName;
+}
+------------------------------------------------------------------
+private int age;
+private int salary;
+private double balance;
+
+Good Practice: Declare each variable on a separate line for clarity.
+Avoid: Declaring multiple variables of different types on the same line.
+------------------------------------------------------------------
+Local variables inside methods should follow a similar order
+public void process() {
+    int count = 0;   // Primitive first
+    String name = "Ganesh";
+    List<Integer> ids = new ArrayList<>();
+    Address address = new Address();
+}
+------------------------------------------------------------------
+
+
+observations :
+add(int index, E element) // it can add elements upto size of collection
+indexOf(Object o) lastIndexOf(Object o) // returns -1 if not found
+Vector and Stack are similar to ArrayList but are synchronized, making them slower for concurrent access.
+HashSet are unordered, meaning the iteration order is not guaranteed. However, LinkedHashSet maintains the insertion order, and TreeSet orders elements based on their natural ordering or a provided comparator.
+ArrayDeque is typically faster than LinkedList for most operations because of its underlying array-based structure.
+Insertion/removal operations are O(1) for both ends, but resizing an array (for ArrayDeque) can be costly.
+A map does not allow duplicate keys. If you try to insert a duplicate key, the value associated with the key is updated instead.
+HashMap allows one null key and multiple null values.
+TreeMap does not allow null keys but can have null values, depending on the comparator used.
+Hashtable does not allow null keys or values.
+Most collection implementations are not thread-safe. For thread-safe operations, you need to use Collections.synchronizedList(), Collections.synchronizedSet(), or use thread-safe implementations like ConcurrentHashMap.
+Modifying a collection while iterating over it (except via Iterator.remove()) can lead to ConcurrentModificationException.
+iterator() : if the list is modified while iterating (except through the iterator itself), it will throw a ConcurrentModificationException and Can only iterate in one direction (forward).
+You can use previous() to move backward and next() to move forward.
+It supports add(), remove(), and set() methods while iterating
+Default Values of Generic Data Types: Reference types (Objects, Classes):default value is null.
+
+Primitive wrapper types (Integer, Double, Boolean, etc.):Default value is also null because they are objects.
+Primitive types (int, double, boolean, etc.):Generics do not directly support primitives, but when using wrappers (Integer, Double), they default to null.
+
