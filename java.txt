@@ -143,6 +143,122 @@ StringBuffer (synchronized mutable strings): StringBuffer sb = new StringBuffer(
 String Comparison: str1.equals(str2), str1.equalsIgnoreCase(str2)
 
 
+
+Exception :
+
+// Custom Exception Class
+class MyException extends Exception {
+    MyException(String message) {
+        super(message);
+    }
+}
+
+public class ExceptionExamples {
+    
+    // Method using throws
+    static void checkAge(int age) throws Exception {
+        if (age < 18) {
+            throw new Exception("Not eligible to vote");
+        }
+        System.out.println("You can vote!");
+    }
+    
+    // Method to trigger StackOverflowError
+    static void recursiveMethod() {
+        recursiveMethod(); // Infinite recursion → StackOverflowError
+    }
+
+    public static void main(String[] args) {
+        
+        // 1. Checked Exception (FileNotFoundException)
+        try {
+            FileReader file = new FileReader("file.txt"); // Might not exist!
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found!");
+        }
+
+        // 2. Unchecked Exception (ArithmeticException)
+        try {
+            int num = 10 / 0;
+        } catch (ArithmeticException e) {
+            System.out.println("Cannot divide by zero!");
+        }
+
+        // 3. Multiple Catch Blocks
+        try {
+            int[] arr = {1, 2, 3};
+            System.out.println(arr[5]); // ArrayIndexOutOfBoundsException
+        } catch (ArithmeticException e) {
+            System.out.println("Math error!");
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("Index out of bounds!");
+        }
+
+        // 4. Finally Block
+        try {
+            System.out.println(10 / 2);
+        } catch (Exception e) {
+            System.out.println("Error!");
+        } finally {
+            System.out.println("This will always execute.");
+        }
+
+        // 5. Throws Keyword Example
+        try {
+            checkAge(15);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+        // 6. Throw Keyword Example
+        try {
+            throw new ArithmeticException("Manually thrown exception");
+        } catch (ArithmeticException e) {
+            System.out.println(e.getMessage());
+        }
+
+        // 7. Custom Exception Example
+        try {
+            throw new MyException("This is a custom exception!");
+        } catch (MyException e) {
+            System.out.println(e.getMessage());
+        }
+
+        // 8. StackOverflowError Example
+        recursiveMethod(); 
+        
+    }
+}
+
+------------------------------------------------------------------
+
+Multithresding :
+1. Thread Class 2. Runnable Interface
+public synchronized void increment() {} // synchronized keyword avoids race condition for method
+wait() makes a thread pause execution until another thread calls notify().notify() wakes up the waiting thread.
+A deadlock happens when two or more threads wait forever because each is holding a resource the other needs. Solution : 1. Lock Resources in the Same Order 2. tryLock()
+Thread Pool is a collection of pre-created reusable threads that execute tasks efficiently without creating new threads each time
+
+-------------------------------------------------------------------
+
+Access Modifiers (Control Visibility)
+public → Accessible from anywhere in the program.
+protected → Accessible within the same package and subclasses.
+private → Accessible only within the same class.
+(default / package-private) → Accessible only within the same package (no keyword needed).
+
+Non-Access Modifiers (Modify Behavior)
+static → Belongs to the class rather than an instance.
+final → Used for constants, preventing inheritance (class), and preventing method overriding.
+abstract → Used in abstract classes and methods without a body.
+synchronized → Used in multithreading to allow only one thread at a time.
+volatile → Ensures visibility of shared variables in multithreading.
+transient → Prevents a field from being serialized.
+strictfp → Ensures floating-point calculations follow IEEE precision rules.
+native → Used to call platform-specific (C/C++) code.
+
+------------------------------------------------------------------
+
 Indentations :
 int age = 25; 
 ------------------------------------------------------------------
