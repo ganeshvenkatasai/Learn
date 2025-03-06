@@ -1,0 +1,106 @@
+Understand Requirements – Clarify the problem statement and ask questions.
+Identify Core Entities – List the main objects (e.g., User, Post, Message).
+Define Relationships – Determine how entities interact (e.g., One-to-Many, Many-to-Many).
+Choose Design Patterns – Pick relevant patterns (e.g., Singleton, Factory, Observer).
+Define Class Diagram – Sketch main classes, attributes, and methods.
+Decide Storage Strategy – Choose between SQL, NoSQL, or in-memory storage.
+Design APIs – List important methods and input/output details.
+Handle Concurrency – Consider locks, queues, and atomic operations.
+Ensure Scalability – Plan for caching, sharding, and microservices if needed.
+Consider Edge Cases – Handle failures, invalid inputs, and performance bottlenecks.
+Discuss Trade-offs – Justify your choices and alternative approaches.
+Write Clean Code – Follow SOLID principles and modular design.
+Optimize & Improve – Get feedback and refine the design.
+
+
+1. Requirement Analysis
+Clarify scope – Functional & non-functional requirements.
+Identify users & actions – Who uses it and how?
+2. Identify Core Entities & Relationships
+Use case diagrams – Show interactions between users and the system.
+ER Diagram – Define entities and their relationships.
+3. Storage Choice (SQL vs NoSQL)
+SQL – When data has structured relationships (e.g., banking, e-commerce).
+NoSQL – When dealing with high-scale, unstructured, or semi-structured data (e.g., social media, real-time analytics).
+4. API Design (REST vs gRPC vs GraphQL)
+REST – Simple, stateless, widely used (e.g., CRUD operations).
+gRPC – Efficient, low-latency, for internal microservices.
+GraphQL – When clients need flexible queries, avoiding over-fetching.
+5. Class Design (OOP Concepts & SOLID Principles)
+Encapsulation – Hide internal details, expose only required methods.
+Inheritance & Polymorphism – Code reusability and flexibility.
+SOLID Principles – Single Responsibility, Open/Closed, etc.
+6. Design Patterns (When to Use What?)
+Singleton – Ensure only one instance (e.g., Logger, Database Connection).
+Factory – Object creation logic (e.g., different payment methods).
+Observer – Event-driven updates (e.g., notifications in social media).
+Decorator – Add functionalities dynamically (e.g., applying discounts).
+Strategy – Select behavior at runtime (e.g., different sorting algorithms).
+7. Caching Strategies
+LRU Cache – Remove least recently used items (e.g., session storage).
+Redis/Memcached – Fast in-memory storage (e.g., reducing DB load).
+8. Concurrency & Thread Safety
+Locks & Mutexes – Prevent race conditions.
+Atomic Operations – Ensure safe concurrent updates.
+Queues (Kafka, RabbitMQ) – Handle distributed requests safely.
+9. Scalability Considerations
+Load Balancing – Distribute traffic across multiple servers.
+Sharding – Split database by key (e.g., user ID).
+CDN – Cache static content for faster delivery.
+10. Logging & Monitoring
+Log Levels (Info, Error, Debug) – Identify issues efficiently.
+Observability Tools – Prometheus, ELK Stack for tracking performance.
+11. Security & Authentication
+OAuth/JWT – Secure API authentication.
+Rate Limiting – Prevent API abuse (e.g., 100 requests/min per user).
+Encryption (AES, RSA) – Protect sensitive data.
+12. Edge Case Handling
+Handling Failures – Retry logic, circuit breakers.
+Timeouts & Graceful Degradation – Ensure system reliability.
+Idempotency – Avoid duplicate transactions.
+
+
+
+
+Key Things to Keep in Mind for HLD (High-Level Design) Interviews
+1. Understand the Problem Statement
+Clarify functional & non-functional requirements.
+Identify key use cases and expected scale.
+2. Define System Components
+Identify major services, databases, caches, queues, and APIs.
+Use a block diagram to visualize architecture.
+3. Choose the Right Database (SQL vs NoSQL)
+SQL – When strong consistency & structured data is needed (e.g., banking).
+NoSQL – When handling large-scale, unstructured, or flexible data (e.g., social media).
+4. API Design (REST, gRPC, GraphQL)
+REST – Simple, stateless, widely used.
+gRPC – Efficient, low-latency, good for internal microservices.
+GraphQL – When clients need flexible queries.
+5. Scalability Considerations
+Horizontal Scaling – Adding more servers (e.g., microservices).
+Vertical Scaling – Upgrading existing servers (limited by hardware).
+Database Sharding – Split data across multiple databases.
+Load Balancing – Distribute traffic to avoid overload.
+6. Caching Strategies
+Redis/Memcached – Fast in-memory caching to reduce DB calls.
+CDN (Content Delivery Network) – Store static content closer to users.
+7. Asynchronous Processing & Queues
+Message Queues (Kafka, RabbitMQ) – Handle background tasks.
+Event-Driven Architecture – Decouple services using pub/sub models.
+8. Concurrency & Rate Limiting
+Locks & Mutexes – Prevent data conflicts in concurrent operations.
+Rate Limiting (Token Bucket, Leaky Bucket) – Prevent API abuse.
+9. Fault Tolerance & Reliability
+Replication – Store multiple copies of data (e.g., read replicas).
+Circuit Breaker Pattern – Prevent system overload by failing fast.
+Graceful Degradation – Reduce features instead of complete failure.
+10. Security & Authentication
+OAuth/JWT – Secure API access.
+Data Encryption (AES, TLS) – Protect sensitive data.
+DDoS Protection – Use firewalls, rate limiting.
+11. Monitoring & Logging
+Observability Tools (Prometheus, ELK Stack) – Track system health.
+Log Levels (Info, Debug, Error) – Troubleshoot issues efficiently.
+12. Trade-offs & Justifications
+Always explain why you chose a specific approach.
+Compare alternatives and discuss pros/cons.
