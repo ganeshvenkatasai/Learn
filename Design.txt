@@ -1,106 +1,861 @@
-Understand Requirements – Clarify the problem statement and ask questions.
-Identify Core Entities – List the main objects (e.g., User, Post, Message).
-Define Relationships – Determine how entities interact (e.g., One-to-Many, Many-to-Many).
-Choose Design Patterns – Pick relevant patterns (e.g., Singleton, Factory, Observer).
-Define Class Diagram – Sketch main classes, attributes, and methods.
-Decide Storage Strategy – Choose between SQL, NoSQL, or in-memory storage.
-Design APIs – List important methods and input/output details.
-Handle Concurrency – Consider locks, queues, and atomic operations.
-Ensure Scalability – Plan for caching, sharding, and microservices if needed.
-Consider Edge Cases – Handle failures, invalid inputs, and performance bottlenecks.
-Discuss Trade-offs – Justify your choices and alternative approaches.
-Write Clean Code – Follow SOLID principles and modular design.
-Optimize & Improve – Get feedback and refine the design.
+scalability, reliability, availability, latency
+CAP Theorem
+ACID vs BASE
+
+Design Patterns in HLD:
+1. Scalability & Load Handling
+Load Balancing (Round Robin, Weighted Round Robin, IP Hash, Least Connections, Least Connections, Weighted Least Connections, Least Response Time, Consistent Hashing, Geographic Load Balancing, )
+Sharding (Horizontal Partitioning)
+Types of Sharding
+Range-Based Sharding : Splits data by value ranges (e.g., IDs 1-1000 → Shard A).
+Hash-Based Sharding : Uses a hash function (e.g., hash(key) % N) to distribute data.
+Directory-Based Sharding : Uses a lookup table to map keys to shards.
+Geo/Region-Based Sharding : Splits data by physical location (e.g., US → Shard 1, EU → Shard 2).
+Key-Based (Dynamic) Sharding : Custom logic assigns shards (e.g., user_id % 10).
+Vertical Sharding (Column-wise) : Splits tables by columns (e.g., users_profile vs. users_orders).
+
+Caching (Redis, CDN, LRU Eviction)
+Types of Caches
+1. In-Memory Cache	RAM (Fastest)	Frequent reads	Redis, Memcached
+2. CDN Cache	Edge servers (Global)	Static files (images, JS)	Cloudflare, Akamai
+3. Database Cache	DB’s built-in cache	Query results	PostgreSQL cache
+4. Browser Cache	User’s device	Websites (CSS/JS)	Chrome cache
+5. Application Cache	App layer (Custom)	Session data	Django cache
+
+Cache Strategies :
+
+Write-Through
+Data is written to cache and DB simultaneously.
+Use case: Banking apps (consistency critical).
+
+Write-Behind (Write-Back)
+Data goes to cache first → DB later (async).
+Use case: High-write systems (e.g., logs).
+
+Cache-Aside (Lazy Loading)
+App checks cache first; if missing, fetches from DB.
+Use case: Most read-heavy apps (e.g., social media).
+
+Time-to-Live (TTL)
+Cache auto-deletes data after X seconds.
+
+When to Use Caching?
+✅ Read-heavy apps (e.g., blogs, social media).
+✅ Slow backend (DB/API calls > 100ms).
+✅ Repetitive data (e.g., user profiles, product listings).
+
+When to Avoid?
+❌ Frequently changing data (e.g., real-time sensors).
+❌ Critical consistency needed (e.g., payment systems).
+
+Cache Eviction Policies List :
+
+LRU (Least Recently Used) – Removes the least recently accessed item.
+LFU (Least Frequently Used) – Removes the least frequently accessed item.
+FIFO (First In, First Out) – Removes the oldest item (based on insertion time).
+LIFO (Last In, First Out) – Removes the newest item.
+Random Replacement (RR) – Randomly selects an item to evict.
+TTL (Time-To-Live) – Automatically expires data after a set time.
+MRU (Most Recently Used) – Removes the most recently accessed item (rare).
+
+Bonus:
+ARC (Adaptive Replacement Cache) – Balances between LRU and LFU.
+2Q (Two Queues) – Uses a mix of FIFO and LRU.
 
 
-1. Requirement Analysis
-Clarify scope – Functional & non-functional requirements.
-Identify users & actions – Who uses it and how?
-2. Identify Core Entities & Relationships
-Use case diagrams – Show interactions between users and the system.
-ER Diagram – Define entities and their relationships.
-3. Storage Choice (SQL vs NoSQL)
-SQL – When data has structured relationships (e.g., banking, e-commerce).
-NoSQL – When dealing with high-scale, unstructured, or semi-structured data (e.g., social media, real-time analytics).
-4. API Design (REST vs gRPC vs GraphQL)
-REST – Simple, stateless, widely used (e.g., CRUD operations).
-gRPC – Efficient, low-latency, for internal microservices.
-GraphQL – When clients need flexible queries, avoiding over-fetching.
-5. Class Design (OOP Concepts & SOLID Principles)
-Encapsulation – Hide internal details, expose only required methods.
-Inheritance & Polymorphism – Code reusability and flexibility.
-SOLID Principles – Single Responsibility, Open/Closed, etc.
-6. Design Patterns (When to Use What?)
-Singleton – Ensure only one instance (e.g., Logger, Database Connection).
-Factory – Object creation logic (e.g., different payment methods).
-Observer – Event-driven updates (e.g., notifications in social media).
-Decorator – Add functionalities dynamically (e.g., applying discounts).
-Strategy – Select behavior at runtime (e.g., different sorting algorithms).
-7. Caching Strategies
-LRU Cache – Remove least recently used items (e.g., session storage).
-Redis/Memcached – Fast in-memory storage (e.g., reducing DB load).
-8. Concurrency & Thread Safety
-Locks & Mutexes – Prevent race conditions.
-Atomic Operations – Ensure safe concurrent updates.
-Queues (Kafka, RabbitMQ) – Handle distributed requests safely.
-9. Scalability Considerations
-Load Balancing – Distribute traffic across multiple servers.
-Sharding – Split database by key (e.g., user ID).
-CDN – Cache static content for faster delivery.
-10. Logging & Monitoring
-Log Levels (Info, Error, Debug) – Identify issues efficiently.
-Observability Tools – Prometheus, ELK Stack for tracking performance.
-11. Security & Authentication
-OAuth/JWT – Secure API authentication.
-Rate Limiting – Prevent API abuse (e.g., 100 requests/min per user).
-Encryption (AES, RSA) – Protect sensitive data.
-12. Edge Case Handling
-Handling Failures – Retry logic, circuit breakers.
-Timeouts & Graceful Degradation – Ensure system reliability.
-Idempotency – Avoid duplicate transactions.
+
+Read Replicas (Scale Read Operations)
+Definition: Exact, read-only copies of the primary (master) database.
+
+How Read Replicas Work
+Primary DB handles all writes (INSERT/UPDATE/DELETE).
+Changes are replicated (asynchronously/synchronously) to replicas.
+Read queries (SELECT) are directed to replicas.
+Read Replica Flow
+(Visual: Writes → Primary | Reads → Replicas)
+
+When to Use Read Replicas?
+✔ Read-heavy apps (e.g., blogs, analytics dashboards).
+✔ Reporting queries (slow, complex SELECTs).
+✔ Geographically distributed users (place replicas near users).
+
+When to Avoid?
+❌ Write-heavy systems (replicas add replication lag).
+❌ Strong consistency needed (replicas may serve stale data).
+
+Key Challenges
+⚠ Replication Lag: Replicas may serve stale data (eventual consistency).
+⚠ Failover Complexity: Promoting a replica to primary requires care.
+Pro Tip
+Use connection pools (e.g., PgBouncer) to route reads/writes efficiently.
+
+2. Fault Tolerance & Reliability
+Circuit Breaker (Fail Fast, e.g., Hystrix)
+A Circuit Breaker is a design pattern used in software development, particularly in distributed systems, to improve fault tolerance and prevent cascading failures. It acts as a safety mechanism to stop calls to a failing service, allowing it time to recover before retrying.
+
+How It Works:
+The Circuit Breaker pattern is inspired by electrical circuit breakers. It monitors requests to a service and, if failures reach a threshold, it "trips" and temporarily stops further requests. This prevents overloading a failing service and gives it time to recover.
+
+Circuit Breaker States:
+Closed (Normal Operation):
+Requests are allowed to pass through.
+Failures are counted; if they exceed a threshold, the circuit trips to Open.
+
+Open (Failure Detected):
+Requests are immediately rejected (no calls to the failing service).
+After a timeout period, the circuit moves to Half-Open.
+
+Half-Open (Testing Recovery):
+A limited number of test requests are allowed.
+If they succeed, the circuit returns to Closed.
+If they fail, it goes back to Open.
+
+Benefits:
+Prevents cascading failures by stopping repeated calls to a failing service.
+Reduces latency by failing fast instead of waiting for timeouts.
+Improves system resilience by allowing services to recover.
+
+Use Cases:
+Microservices communication (e.g., when Service A calls Service B).
+External API calls (e.g., payment gateways, third-party services).
+
+
+Leader Election (ZooKeeper, Raft)
+Leader Election is a coordination mechanism in distributed systems where multiple nodes (servers/processes) select one node as the "leader" to manage tasks, while others act as followers. This ensures:
+Consistency (only one leader makes decisions).
+Fault tolerance (if the leader fails, a new one is elected).
+Avoiding conflicts (preventing split-brain scenarios).
+How Leader Election Works
+Nodes Communicate:
+Nodes exchange messages (e.g., "I’m alive" or "I want to be leader").
+Protocols like Paxos, Raft, or ZooKeeper’s ZAB are often used.
+Election Criteria:
+Highest ID/node priority (e.g., oldest node).
+Randomized backoff (e.g., Bully Algorithm).
+Consensus-based voting (e.g., Raft).
+Leader Responsibilities:
+Coordinates tasks (e.g., scheduling, writes in a database).
+Sends heartbeats to followers (to prove it’s alive).
+Failure Handling:
+If the leader crashes, followers detect missing heartbeats and trigger a new election.
+
+Leader Election Algorithms
+Algorithm	Approach	Use Case
+Bully	Highest-ID node wins	Small clusters
+Raft	Voting + log replication	Distributed databases (etcd)
+Paxos	Consensus via proposals	Highly available systems
+ZooKeeper	Uses ephemeral nodes + watches	Coordination services
+
+
+Redundancy (Multi-AZ, Replication)
+Redundancy is a key strategy in distributed systems to ensure high availability (HA), fault tolerance, and disaster recovery. It involves duplicating critical components (data, servers, services) so that if one fails, another can take over seamlessly.
+
+1. Types of Redundancy
+A. Multi-AZ (Availability Zone) Deployment
+Definition: Distributes resources across multiple physically separated data centers (Availability Zones) within a cloud region.
+Purpose: Protects against data center failures (power outages, network issues, natural disasters).
+How it Works:
+A primary instance runs in AZ-1, and a standby replica in AZ-2.
+If AZ-1 fails, traffic automatically fails over to AZ-2.
+Example: AWS RDS Multi-AZ, Azure Zone-Redundant Storage.
+
+B. Replication (Data Redundancy)
+Definition: Copies data across multiple nodes to ensure consistency and availability.
+Types:
+Synchronous Replication (strong consistency, higher latency):
+Data is written to primary + replicas before confirming success (e.g., PostgreSQL with sync replication).
+Asynchronous Replication (eventual consistency, lower latency):
+Primary writes first, replicas update later (e.g., MySQL async replication).
+Multi-Region Replication (global redundancy):
+Data is copied across geographically distant regions (e.g., Google Cloud Spanner).
+
+2. Why Use Redundancy?
+Benefit	Multi-AZ	Replication
+Fault Tolerance	✅	✅
+Disaster Recovery	✅	✅
+Load Balancing	❌	✅ (read replicas)
+Zero Downtime	✅ (auto-failover)	✅ (if synced)
+3. Real-World Implementations
+A. AWS Multi-AZ (High Availability)
+Amazon RDS (Relational DB):
+Primary DB in us-east-1a, standby in us-east-1b.
+Automatic failover in ~60 seconds.
+Elastic Load Balancer (ELB):
+Distributes traffic across AZs to prevent single-point failures.
+B. Database Replication
+MongoDB Replica Set:
+One primary node + multiple secondaries.
+If primary fails, an election picks a new leader.
+Kafka Replication:
+Topics are replicated across brokers to prevent data loss.
+C. Kubernetes & Multi-AZ
+Deploying pods across AZs (using topologySpreadConstraints).
+Persistent Volumes (PVs) replicated via storage solutions (e.g., Ceph, Portworx).
+4. Challenges & Trade-offs
+Challenge	Solution
+Higher Costs (more resources)	Use auto-scaling & spot instances
+Data Consistency Issues	Choose sync/async wisely
+Complex Failover Logic	Use managed services (e.g., AWS RDS, MongoDB Atlas)
+5. Key Takeaways
+✅ Multi-AZ = Protects against data center failures (best for HA).
+✅ Replication = Ensures data durability & read scalability.
+✅ Synchronous = Strong consistency (but slower).
+✅ Asynchronous = Faster but risk of data loss.
+
+Health Checks & Auto-Healing
+1. Health Checks: "Is This Thing Working?"
+What it is: A way for a system to check if a server, service, or application is running properly.
+How it works:
+Sends a small test request (like a "ping").
+Expects a response (e.g., HTTP 200 OK or "I'm alive!").
+If no response (or errors), marks it as unhealthy.
+Examples:
+Web Server: Checks if /health returns success.
+Database: Tests if queries execute without errors.
+Kubernetes: Uses liveness probes to restart failing containers.
+2. Auto-Healing: "Fix It Automatically!"
+What it is: When a system detects a problem (via health checks) and tries to fix it without human help.
+How it works:
+Detects failure (e.g., server crash, high CPU, timeout).
+Tries to recover (restarts, replaces, or shifts traffic).
+Alerts humans if it can’t fix it.
+Examples:
+Cloud (AWS/Azure): Auto-replaces unhealthy VMs.
+Kubernetes: Kills & restarts crashing pods.
+Load Balancer: Stops sending traffic to a broken server.
+Why This Matters?
+✅ Less downtime – Systems recover faster.
+✅ Less manual work – No need for 3 AM emergency fixes.
+✅ More reliable apps – Bad parts are removed automatically.
+
+
+3. Data Consistency & Messaging
+What it is: Making sure all parts of a system agree on the same data, even when updates happen.
+Types of Consistency:
+Strong Consistency
+Eventual Consistency
+
+Messaging: "Passing Notes in Class"
+What it is: Systems communicate by sending messages (events) instead of directly calling each other.
+
+Why?
+Avoids bottlenecks (no waiting for replies).
+Handles failures gracefully (retry if a service is down).
+Tools: Kafka, RabbitMQ, AWS SQS.
+
+Event Sourcing (Append-Only Log)
+Like a Diary for Your App
+What it is: Storing every change (events) as an append-only log, instead of just the latest state.
+
+Example (Bank Account):
+Event	Balance
+AccountCreated($100)	$100
+Deposited($50)	$150
+Withdrew($30)	$120
+Why Use It?
+✅ Full history – Know exactly what happened (audits, debugging).
+✅ Time travel – Rebuild past states by replaying events.
+✅ Scalability – Easy to distribute events across systems.
+Used in: Banking, e-commerce (order histories), blockchain.
+
+
+CQRS (Separate Read/Write Paths)
+What is CQRS?
+CQRS (Command Query Responsibility Segregation) is a design pattern that splits an application into two parts:
+Commands (Writes) – Handle updates (create, update, delete).
+Queries (Reads) – Handle data retrieval.
+Instead of using the same model for both, they are separated, allowing optimization for each task.
+
+Why Use CQRS?
+✅ Better Performance – Reads can be optimized (e.g., cached, denormalized).
+✅ Scalability – Reads & writes can scale independently.
+✅ Flexibility – Different databases for reads (fast queries) and writes (strong consistency).
+✅ Simpler Code – No complex "one-size-fits-all" model.
+
+How It Works
+1. Commands (Write Path)
+Actions: CreateOrder, UpdateUser, DeletePost.
+Stored in: A structured, transactional database (e.g., PostgreSQL).
+May trigger: Events (for eventual consistency).
+
+2. Queries (Read Path)
+Actions: GetUserProfile, ListProducts.
+Optimized for: Speed (denormalized data, caching, materialized views).
+Stored in: Fast read-optimized stores (e.g., Redis, Elasticsearch).
+
+3. Sync Between Read & Write
+Eventual Consistency: Changes in the write DB propagate to the read DB (e.g., via Kafka, change data capture).
+Example:
+You update a username (Command → Write DB).
+Later, the read DB updates (via an event).
+
+Saga Pattern (Distributed Transactions)
+Problem:
+In microservices, a single business process (e.g., "Place Order") spans multiple services (Order, Payment, Inventory). If one step fails, how do we undo previous steps without a traditional database transaction?
+
+Solution: Sagas
+A Saga breaks a transaction into smaller steps, each handled by a different service. If any step fails, compensating actions (rollbacks) are triggered to maintain consistency.
+
+How Sagas Work
+1. Two Types of Sagas
+Choreography-Based (Decentralized)
+Services emit events to trigger the next step.
+Example: Order → Payment → Inventory (each reacts to events).
+Orchestration-Based (Centralized)
+A Saga Orchestrator manages the workflow.
+Example: Orchestrator tells Order → Payment → Inventory what to do.
+
+2. Compensating Actions (Rollbacks)
+If a step fails, the Saga executes "undo" actions:
+
+Step	Action	Compensating Action
+Create Order	✅ Success	(None)
+Charge Payment	✅ Success	(None)
+Update Inventory	❌ Fails	Refund Payment
+Real-World Example: E-Commerce Checkout
+Order Service → Creates order (PENDING).
+Payment Service → Charges credit card.
+Inventory Service → Reserves items.
+
+If inventory fails:
+Payment Service issues refund.
+Order Service cancels order.
+
+Pros & Cons
+✅ Works across microservices	❌ Complex error handling
+✅ No distributed locks needed	❌ Temporary inconsistency
+✅ Scalable & decoupled	❌ Hard to debug
+When to Use Sagas?
+✔ Long-running transactions (e.g., travel booking).
+✔ Microservices with no shared DB.
+❌ Avoid for simple ACID transactions (just use a DB).
+
+Key Takeaways
+🔹 Sagas split transactions into steps + rollbacks.
+🔹 Choreography (events) vs. Orchestration (central control).
+🔹 Eventual consistency (not immediate like ACID).
+
+
+Publisher-Subscriber (Kafka, RabbitMQ)
+What is Pub/Sub?
+Pub/Sub is a messaging pattern where:
+
+Publishers send messages without knowing who receives them
+
+Subscribers receive only the messages they're interested in
+
+A message broker (like Kafka or RabbitMQ) acts as the middleman
+
+How It Works (Post Office Analogy)
+Publishers = People mailing letters (don't know who will get them)
+
+Message Broker = Post office (receives and routes mail)
+
+Subscribers = People with PO boxes (only get mail addressed to their box)
+
+Key Components
+Component	Role	Example
+Topic	Category/channel for messages	"orders", "payments"
+Publisher	Sends messages to topics	Order service
+Subscriber	Listens to specific topics	Inventory service
+Broker	Manages message storage and delivery	Kafka, RabbitMQ
+Message	Data being sent (usually JSON/protobuf)	{order_id: 123, status: "paid"}
+RabbitMQ vs Kafka
+Feature	RabbitMQ (Traditional)	Kafka (Modern)
+Best For	Simple workflows, RPC	High-throughput, event streaming
+Message Life	Deleted after consumption	Stored for set period (days/weeks)
+Speed	Fast for simple cases	Extremely fast for big data
+Complexity	Easier to set up	More complex but powerful
+Real-World Example: Food Delivery App
+Order Service (Publisher) → Sends "order_placed" event to "orders" topic
+
+Multiple Subscribers react:
+
+Payment Service: Processes payment
+
+Kitchen Service: Starts preparing food
+
+Notification Service: Sends confirmation SMS
+
+Why Use Pub/Sub?
+✅ Loose coupling - Services don't need to know about each other
+✅ Scalability - Easily add more subscribers
+✅ Reliability - Messages persist if service is down
+✅ Flexibility - Different services can process at their own pace
+
+Common Use Cases
+Event-driven architectures
+
+Microservices communication
+
+Real-time notifications
+
+Data streaming/analytics
+
+Log aggregation
+
+Potential Challenges
+⚠️ Message ordering (Kafka preserves order per partition, RabbitMQ doesn't)
+⚠️ Exactly-once delivery is hard (usually "at least once")
+⚠️ Backpressure handling when subscribers are slow
+
+4. Performance Optimization
+1. Materialized Views (Pre-Computed Queries)
+What: Pre-calculated query results stored as physical tables
+Why: Avoid expensive real-time computations for frequent queries
+How it works:
+
+Database periodically refreshes the view (e.g., hourly/daily)
+
+Queries read from this snapshot instead of raw tables
+
+Example:
+
+sql
+Copy
+-- Create materialized view for daily sales reports
+CREATE MATERIALIZED VIEW daily_sales AS 
+SELECT date, SUM(amount) 
+FROM orders 
+GROUP BY date
+REFRESH EVERY 1 HOUR;
+Best for: Dashboards, analytics, complex aggregations
+
+2. Lazy Loading (On-Demand Fetch)
+What: Load data only when needed
+Why: Reduce initial load time and memory usage
+
+Common implementations:
+
+Web: Load images when scrolling into view (loading="lazy")
+
+Databases: JOIN queries executed only when accessing related data
+
+Frontend: React.lazy() for code splitting
+
+3. Batching (Bulk Operations)
+What: Group multiple operations into a single request
+Why: Reduce network/processing overhead
+
+Examples:
+
+Scenario	Single Request	Batched Request
+Database writes	100 INSERT statements	1 BULK INSERT
+API calls	50 HTTP requests	1 request with array
+Email sending	Send individually	Send as digest
+
+
+4. Rate Limiting (API Throttling)
+What: Control request frequency per user/service
+Why: Prevent abuse, ensure fair usage, maintain stability
+
+Common algorithms:
+
+Token bucket: Refilling token pool (e.g., 100 requests/hour)
+
+Leaky bucket: Fixed outflow rate
+
+Fixed window: Counts per time window (e.g., 10 requests/minute)
+
+Implementation Example:
+
+python
+Copy
+from fastapi import FastAPI, Request
+from slowapi import Limiter, _rate_limit_exceeded_handler
+
+app = FastAPI()
+limiter = Limiter(key_func=get_ip_address)
+app.state.limiter = limiter
+
+@app.get("/api")
+@limiter.limit("5/minute")
+async def sensitive_endpoint(request: Request):
+    return {"data": "protected"}
+Best for: Public APIs, payment endpoints, auth services
+
+Performance Optimization Cheat Sheet
+Technique	When to Use	Potential Gain
+Materialized Views	Frequent complex reads	10-100x faster queries
+Lazy Loading	Large payloads with partial usage	2-5x faster load
+Batching	High-volume small operations	50-90% fewer requests
+Rate Limiting	Public-facing APIs	Prevents 100% outages
+
+5. API & Communication
+1. API Gateway (Single Entry Point)
+What: A unified entry point that routes requests to backend services
+Why:
+
+Simplifies client access (one endpoint)
+
+Handles cross-cutting concerns (auth, logging, rate limiting)
+
+Aggregates responses from multiple services
+
+Features:
+✅ Request routing & composition
+✅ Authentication/authorization
+✅ Load balancing
+✅ Caching
+✅ Protocol translation (HTTP → gRPC)
+
+Example:
+
+Copy
+Client → API Gateway → [UserService | OrderService | PaymentService]
+Tools: Kong, AWS API Gateway, Apigee, Nginx
+
+2. Backend for Frontend (BFF)
+What: Dedicated API layer per client type
+Why:
+
+Customizes data for specific frontend needs
+
+Reduces over-fetching
+
+Isolates client-specific logic
+
+Example:
+
+Copy
+Mobile App → Mobile BFF (optimized for small payloads)  
+Web App → Web BFF (rich data for desktop)  
+IoT Device → IoT BFF (binary protocols)
+Key Benefit: Frontends get exactly what they need without backend changes
+
+3. Service Mesh (Istio, Linkerd)
+What: Infrastructure layer handling service-to-service communication
+Why:
+
+Manages traffic (load balancing, retries)
+
+Observability (metrics, tracing)
+
+Security (mTLS, policies)
+
+How it works:
+
+Sidecar proxies (Envoy) intercept all service traffic
+
+Control plane manages configuration
+
+Features:
+🔹 Circuit breaking
+🔹 A/B testing
+🔹 Automatic retries
+🔹 Zero-trust security
+
+Tools: Istio, Linkerd, Consul Connect
+
+4. Polling vs. Webhooks
+Polling (Pull)	Webhooks (Push)
+Mechanism	Client repeatedly checks for updates	Server pushes data when available
+Latency	High (delay between polls)	Low (instant)
+Efficiency	Wastes resources when idle	Efficient (only active when needed)
+Complexity	Simple to implement	Requires endpoint setup
+Use Cases	Status checks, simple clients	Real-time updates (payments, chat)
+Example:
+
+javascript
+Copy
+// Polling (Client-side)
+setInterval(() => fetch('/updates'), 5000);
+
+// Webhook (Server-side)
+app.post('/webhook', (req) => handleUpdate(req.body));
+Hybrid Option: Consider Server-Sent Events (SSE) for real-time streaming
+
+6. Storage & Databases
+1. Write-Ahead Log (WAL) – Crash Recovery Mechanism
+What:
+A transaction log where changes are recorded before they’re applied to the database.
+
+Why Use It?
+
+Guaranteed durability: Survives crashes (e.g., power failure).
+
+Atomicity: Ensures transactions are all-or-nothing.
+
+Performance: Enables batch writes to the main DB.
+
+How It Works:
+
+Log First: Write "Plan to update row X → Y" to WAL.
+
+Apply Later: Update the actual database.
+
+Recovery: After a crash, replay WAL to restore consistency.
+
+Used In:
+
+PostgreSQL, SQLite, Kafka (for replication).
+
+Blockchain (transaction logs).
+
+Example:
+
+plaintext
+Copy
+WAL Entry: [TxID: 123, Action: UPDATE accounts SET balance=200 WHERE id=1]
+2. Time-Series Database (Prometheus, InfluxDB)
+What:
+Optimized for time-stamped data (metrics, IoT sensors, logs).
+
+Key Features:
+
+Time-centric storage: Data indexed by timestamp.
+
+Efficient compression: Downsamples old data automatically.
+
+Specialized queries: rate(), moving_avg().
+
+VS Traditional DBs:
+
+Query	Time-Series DB	Traditional DB
+CPU usage last 5 mins	10 ms (native time filters)	500 ms (full scan)
+Tools:
+
+Prometheus: Pull-based metrics + alerting.
+
+InfluxDB: High-throughput writes + SQL-like queries.
+
+TimescaleDB: PostgreSQL extension for time-series.
+
+Example Query (PromQL):
+
+promql
+Copy
+http_requests_total{status="500"}[1h]  // Count 500 errors in last hour
+3. Polyglot Persistence – Mixing SQL + NoSQL
+What:
+Using different databases for different data needs in one system.
+
+Why?
+
+Right tool for the job:
+
+SQL: Transactions, complex queries.
+
+NoSQL: Scalability, flexible schemas.
+
+Common Combos:
+
+Data Type	Database Choice	Reason
+User profiles	PostgreSQL (SQL)	ACID compliance
+Product catalog	MongoDB (Document)	Flexible schema
+Session data	Redis (Key-Value)	Low-latency reads
+Analytics	Cassandra (Wide-Column)	High write throughput
+Example Architecture (E-Commerce):
+
+mermaid
+Copy
+graph LR
+  A[Frontend] --> B[SQL: Orders/Users]
+  A --> C[NoSQL: Product Catalog]
+  A --> D[Redis: Shopping Cart]
+Trade-Offs:
+✅ Optimized performance per use case.
+❌ Complexity: Multiple DBs to manage.
+
+When to Use Each?
+Technology	Best For	Avoid When
+WAL	Systems needing crash recovery	Simple apps with no transactions
+Time-Series DB	Metrics, IoT, monitoring	Relational business data
+Polyglot Persistence	Complex systems with diverse data needs	Small projects
+Pro Tip:
+
+Use WAL for reliability in transactional systems.
+Time-series DBs can reduce storage costs for metrics by 10x vs SQL.
+Start monolithic (single DB), then go polyglot only if needed.
 
 
 
+1. Microservices vs Monolithic Architecture
+Aspect	Monolithic	Microservices
+Structure	Single codebase	Decoupled services (1 service = 1 function)
+Deployment	Deploy entire app	Deploy services independently
+Scalability	Scale vertically (bigger server)	Scale horizontally (add more instances)
+Complexity	Simpler debugging	Harder to trace (needs observability tools)
+Best For	Small apps, startups	Complex systems, large teams
+Example	WordPress	Netflix, Uber
+Trade-Off:
 
-Key Things to Keep in Mind for HLD (High-Level Design) Interviews
-1. Understand the Problem Statement
-Clarify functional & non-functional requirements.
-Identify key use cases and expected scale.
-2. Define System Components
-Identify major services, databases, caches, queues, and APIs.
-Use a block diagram to visualize architecture.
-3. Choose the Right Database (SQL vs NoSQL)
-SQL – When strong consistency & structured data is needed (e.g., banking).
-NoSQL – When handling large-scale, unstructured, or flexible data (e.g., social media).
-4. API Design (REST, gRPC, GraphQL)
-REST – Simple, stateless, widely used.
-gRPC – Efficient, low-latency, good for internal microservices.
-GraphQL – When clients need flexible queries.
-5. Scalability Considerations
-Horizontal Scaling – Adding more servers (e.g., microservices).
-Vertical Scaling – Upgrading existing servers (limited by hardware).
-Database Sharding – Split data across multiple databases.
-Load Balancing – Distribute traffic to avoid overload.
-6. Caching Strategies
-Redis/Memcached – Fast in-memory caching to reduce DB calls.
-CDN (Content Delivery Network) – Store static content closer to users.
-7. Asynchronous Processing & Queues
-Message Queues (Kafka, RabbitMQ) – Handle background tasks.
-Event-Driven Architecture – Decouple services using pub/sub models.
-8. Concurrency & Rate Limiting
-Locks & Mutexes – Prevent data conflicts in concurrent operations.
-Rate Limiting (Token Bucket, Leaky Bucket) – Prevent API abuse.
-9. Fault Tolerance & Reliability
-Replication – Store multiple copies of data (e.g., read replicas).
-Circuit Breaker Pattern – Prevent system overload by failing fast.
-Graceful Degradation – Reduce features instead of complete failure.
-10. Security & Authentication
-OAuth/JWT – Secure API access.
-Data Encryption (AES, TLS) – Protect sensitive data.
-DDoS Protection – Use firewalls, rate limiting.
-11. Monitoring & Logging
-Observability Tools (Prometheus, ELK Stack) – Track system health.
-Log Levels (Info, Debug, Error) – Troubleshoot issues efficiently.
-12. Trade-offs & Justifications
-Always explain why you chose a specific approach.
-Compare alternatives and discuss pros/cons.
+Microservices add overhead (network calls, service discovery) but enable agility.
+
+Monoliths are simpler but hard to scale beyond a point.
+
+2. Load Balancing Algorithms
+Algorithm	How It Works	Use Case
+Round Robin	Rotates requests evenly	Simple stateless apps
+Least Connections	Sends to least busy server	Long-lived connections (e.g., WebSockets)
+Consistent Hashing	Same user → same server (minimizes cache misses)	Distributed caches (Redis)
+Tools: NGINX, AWS ALB, HAProxy.
+
+3. Caching Strategies
+Strategy	Description	Example
+LRU Cache	Evicts least-recently-used items	CPU cache, Redis
+CDN	Caches static content globally	Images, JS/CSS (Cloudflare)
+Redis	In-memory key-value store (low latency)	Session storage
+Memcached	Simple multi-threaded cache	Database query caching
+Rule of Thumb:
+
+Cache read-heavy data (e.g., product catalogs).
+
+Invalidate caches on writes.
+
+4. Database Choices
+Type	Strengths	Weaknesses	Use Case
+SQL	ACID transactions, complex joins	Hard to scale horizontally	Banking, e-commerce
+NoSQL	Flexible schema, horizontal scale	No joins, eventual consistency	IoT, real-time analytics
+Scaling Techniques:
+
+Sharding: Split data by key (e.g., user ID).
+
+Replication: Slave DBs for read scaling.
+
+5. Message Queues
+Tool	Model	Best For	Throughput
+Kafka	Pub/Sub + streaming	Event sourcing, logs	1M+ msgs/sec
+RabbitMQ	Queue-based	RPC, task queues	50K msgs/sec
+Patterns:
+
+Event-driven: Services react to events (e.g., OrderPlaced).
+
+Dead Letter Queue (DLQ): Store failed messages for retry.
+
+6. APIs
+Type	Protocol	Performance	Use Case
+REST	HTTP/JSON	Moderate	CRUD apps, public APIs
+gRPC	HTTP/2 + Protobuf	Very fast	Microservices (internal)
+WebSockets	TCP	Real-time	Chat, live updates
+gRPC vs REST:
+
+gRPC is 5–10x faster but harder to debug.
+
+7. Scalability Approaches
+Type	How	Limits
+Vertical	Upgrade CPU/RAM	Single-server ceiling
+Horizontal	Add servers + load balancing	Complexity (state management)
+Database	Read replicas, partitioning	Eventually consistent reads
+Golden Rule:
+
+Scale horizontally first (cloud-friendly).
+
+Use auto-scaling (AWS Auto Scaling, Kubernetes HPA).
+
+8. Performance Optimization
+Technique	Impact	Example
+CDN	50–90% faster static content	Cloudflare, AWS CloudFront
+Database Indexing	100–1000x faster queries	CREATE INDEX idx_name ON users(name)
+Denormalization	Faster reads (avoid joins)	Duplicate data in NoSQL
+Pro Tip:
+
+Index high-cardinality fields (e.g., user_id).
+
+CDNs reduce TTFB (Time to First Byte).
+
+Key Takeaways
+Architecture: Start monolithic → split to microservices only when needed.
+
+Scaling: Prefer horizontal scaling + auto-scaling.
+
+Caching: Cache aggressively but invalidate wisely.
+
+APIs: Use gRPC internally, REST/WebSockets externally.
+
+Performance: Indexes + CDNs = easiest wins.
+
+Famous System Design Problems :
+Design Twitter / Facebook Feed
+Design Uber / Ola
+Design URL Shortener (TinyURL)
+Design WhatsApp / Chat System
+
+3. Low-Level Design (LLD) Preparation
+Key Concepts
+Object-Oriented Design (OOD)
+
+SOLID Principles (Single Responsibility, Open-Closed, Liskov Substitution, Interface Segregation, Dependency Inversion)
+
+Class Diagrams (UML - Inheritance, Composition, Aggregation)
+
+Encapsulation, Abstraction, Polymorphism, Inheritance
+
+Design Patterns (Gang of Four)
+
+Creational (Singleton, Factory, Builder, Prototype)
+
+Structural (Adapter, Decorator, Proxy, Facade)
+
+Behavioral (Observer, Strategy, Command, State)
+
+Database Schema Design
+
+Normalization (1NF, 2NF, 3NF, BCNF)
+
+Indexing (B-Tree, Hash Index)
+
+Transactions (ACID Properties)
+
+Concurrency & Multithreading
+
+Thread vs Process
+
+Deadlock & Race Conditions
+
+Synchronization (Locks, Semaphores, Mutex)
+
+Common LLD Problems
+
+Design Parking Lot
+
+Design Snake & Ladder Game
+
+Design Splitwise
+
+Design ATM Machine
+
+Design Elevator System
+
+4. Step-by-Step Approach for Solving Design Problems
+
+For HLD
+Clarify Requirements (Ask clarifying questions)
+Estimate Scale (Traffic, Storage, Bandwidth)
+Define APIs (Endpoints, Request/Response)
+Database Design (Tables, Indexes, Sharding)
+High-Level Architecture (Components, Data Flow)
+Deep Dive (Caching, Load Balancing, Fault Tolerance)
+Identify Bottlenecks (Optimize where needed)
+
+For LLD
+Identify Core Classes & Objects
+Define Relationships (Inheritance, Composition)
+Design Methods & Attributes
+Consider Edge Cases
+Apply Design Patterns if Needed
+Discuss Thread Safety (if applicable)
+
+
+6. Revision Checklist
+HLD Checklist
+✅ Understand scalability (sharding, replication)
+✅ Know caching strategies (Redis, CDN)
+✅ Be familiar with load balancing techniques
+✅ Practice drawing system architecture diagrams
+✅ Know trade-offs (SQL vs NoSQL, Consistency vs Availability)
+
+LLD Checklist
+✅ Master SOLID principles
+✅ Practice UML diagrams (Class, Sequence)
+✅ Know at least 5 design patterns deeply
+✅ Be comfortable with multithreading concepts
+✅ Solve at least 5-10 LLD problems
+
+7. Additional Tips
+Draw Diagrams (HLD: Architecture, LLD: Class Diagrams)
+Think Aloud (Explain your thought process)
+Optimize Later (First make it work, then improve)
+Ask Questions (Clarify constraints early)
+
+
