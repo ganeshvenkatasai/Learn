@@ -239,6 +239,479 @@ wait() makes a thread pause execution until another thread calls notify().notify
 A deadlock happens when two or more threads wait forever because each is holding a resource the other needs. Solution : 1. Lock Resources in the Same Order 2. tryLock()
 Thread Pool is a collection of pre-created reusable threads that execute tasks efficiently without creating new threads each time
 
+
+Key Takeaways :
+
+Thread Creation: Extend Thread or implement Runnable.
+// Method 1: Extend Thread class
+class MyThread extends Thread {
+    public void run() {
+        System.out.println("Thread running: " + Thread.currentThread().getName());
+    }
+}
+
+// Method 2: Implement Runnable
+class MyRunnable implements Runnable {
+    public void run() {
+        System.out.println("Runnable running: " + Thread.currentThread().getName());
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        // Start Thread
+        MyThread t1 = new MyThread();
+        t1.start();
+
+        // Start Runnable
+        Thread t2 = new Thread(new MyRunnable());
+        t2.start();
+    }
+}
+
+Synchronization: Use synchronized methods/blocks or ReentrantLock.
+class Counter {
+    private int count = 0;
+    
+    // Synchronized method
+    public synchronized void increment() {
+        count++;
+    }
+    
+    // Synchronized block
+    public void decrement() {
+        synchronized(this) {
+            count--;
+        }
+    }
+    
+    public int getCount() { return count; }
+}
+
+public class Main {
+    public static void main(String[] args) throws InterruptedException {
+        Counter counter = new Counter();
+        
+        Thread t1 = new Thread(() -> {
+            for (int i = 0; i < 1000; i++) counter.increment();
+        });
+        
+        Thread t2 = new Thread(() -> {
+            for (int i = 0; i < 1000; i++) counter.decrement();
+        });
+        
+        t1.start();
+        t2.start();
+        t1.join();
+        t2.join();
+        
+        System.out.println("Final count: " + counter.getCount()); // Should be 0
+    }
+}
+
+Wait/Notify: For producer-consumer scenarios.
+import java.util.LinkedList;
+import java.util.Queue;
+
+class Buffer {
+    private Queue<Integer> queue = new LinkedList<>();
+    private int capacity = 5;
+    
+    public synchronized void produce(int item) throws InterruptedException {
+        while (queue.size() == capacity) {
+            wait(); // Wait if full
+        }
+        queue.add(item);
+        System.out.println("Produced: " + item);
+        notify(); // Notify consumer
+    }
+    
+    public synchronized void consume() throws InterruptedException {
+        while (queue.isEmpty()) {
+            wait(); // Wait if empty
+        }
+        int item = queue.poll();
+        System.out.println("Consumed: " + item);
+        notify(); // Notify producer
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Buffer buffer = new Buffer();
+        
+        Thread producer = new Thread(() -> {
+            try {
+                for (int i = 1; i <= 10; i++) buffer.produce(i);
+            } catch (InterruptedException e) { e.printStackTrace(); }
+        });
+        
+        Thread consumer = new Thread(() -> {
+            try {
+                for (int i = 1; i <= 10; i++) buffer.consume();
+            } catch (InterruptedException e) { e.printStackTrace(); }
+        });
+        
+        producer.start();
+        consumer.start();
+    }
+}
+
+Thread Pools: Manage threads efficiently with ExecutorService.
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+public class Main {
+    public static void main(String[] args) {
+        ExecutorService executor = Executors.newFixedThreadPool(3);
+        
+        for (int i = 1; i <= 5; i++) {
+            int taskId = i;
+            executor.submit(() -> {
+                System.out.println("Task " + taskId + " running in " + Thread.currentThread().getName());
+            });
+        }
+        
+        executor.shutdown();
+    }
+}
+
+Atomic Operations: AtomicInteger, AtomicReference for lock-free code.
+import java.util.concurrent.atomic.AtomicInteger;
+
+public class Main {
+    public static void main(String[] args) throws InterruptedException {
+        AtomicInteger counter = new AtomicInteger(0);
+        
+        Thread t1 = new Thread(() -> {
+            for (int i = 0; i < 1000; i++) counter.incrementAndGet();
+        });
+        
+        Thread t2 = new Thread(() -> {
+            for (int i = 0; i < 1000; i++) counter.decrementAndGet();
+        });
+        
+        t1.start();
+        t2.start();
+        t1.join();
+        t2.join();
+        
+        System.out.println("Final count: " + counter.get()); // Should be 0
+    }
+}
+
+Deadlock Prevention: Always acquire locks in the same order.
+public class Main {
+    static Object lock1 = new Object();
+    static Object lock2 = new Object();
+    
+    public static void main(String[] args) {
+        // Thread 1 (Causes deadlock)
+        Thread t1 = new Thread(() -> {
+            synchronized(lock1) {
+                System.out.println("Thread 1: Holding lock1");
+                try { Thread.sleep(100); } catch (Exception e) {}
+                synchronized(lock2) {
+                    System.out.println("Thread 1: Holding lock1 & lock2");
+                }
+            }
+        });
+        
+        // Thread 2 (Fixed by acquiring locks in same order)
+        Thread t2 = new Thread(() -> {
+            synchronized(lock1) {  // Changed to lock1 first
+                System.out.println("Thread 2: Holding lock1");
+                try { Thread.sleep(100); } catch (Exception e) {}
+                synchronized(lock2) {
+                    System.out.println("Thread 2: Holding lock1 & lock2");
+                }
+            }
+        });
+        
+        t1.start();
+        t2.start();
+    }
+}
+
+ReentrantLock (Alternative to Synchronized).
+import java.util.concurrent.locks.ReentrantLock;
+
+class Counter {
+    private int count = 0;
+    private ReentrantLock lock = new ReentrantLock();
+    
+    public void increment() {
+        lock.lock();
+        try {
+            count++;
+        } finally {
+            lock.unlock();
+        }
+    }
+}
+
+public class Main {
+    public static void main(String[] args) throws InterruptedException {
+        Counter counter = new Counter();
+        
+        Thread t1 = new Thread(() -> {
+            for (int i = 0; i < 1000; i++) counter.increment();
+        });
+        
+        Thread t2 = new Thread(() -> {
+            for (int i = 0; i < 1000; i++) counter.increment();
+        });
+        
+        t1.start();
+        t2.start();
+        t1.join();
+        t2.join();
+        
+        System.out.println("Final count: " + counter.getCount()); // Should be 2000
+    }
+}
+
+
+-------------------------------------------------------------------
+
+Custom Sorting :
+
+Sorting a List :
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        List<Integer> numbers = Arrays.asList(5, 2, 9, 1, 5);
+        
+        // Ascending order (natural)
+        numbers.sort((a, b) -> a - b);
+        System.out.println("Ascending: " + numbers); // [1, 2, 5, 5, 9]
+        
+        // Descending order
+        numbers.sort((a, b) -> b - a);
+        System.out.println("Descending: " + numbers); // [9, 5, 5, 2, 1]
+    }
+}
+
+Sorting a List of Objects :
+import java.util.*;
+
+class Person {
+    String name;
+    int age;
+    Person(String name, int age) { this.name = name; this.age = age; }
+    public String toString() { return name + "(" + age + ")"; }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        List<Person> people = Arrays.asList(
+            new Person("Alice", 25),
+            new Person("Bob", 20),
+            new Person("Charlie", 30)
+        );
+        
+        // Sort by age (ascending)
+        people.sort((p1, p2) -> p1.age - p2.age);
+        System.out.println("By age: " + people); // [Bob(20), Alice(25), Charlie(30)]
+        
+        // Sort by name length
+        people.sort((p1, p2) -> p1.name.length() - p2.name.length();
+        System.out.println("By name length: " + people); // [Bob(20), Alice(25), Charlie(30)]
+    }
+}
+
+Custom Sorting in a Set :
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        // TreeSet with custom sorting (descending)
+        Set<Integer> set = new TreeSet<>((a, b) -> b - a);
+        set.add(5);
+        set.add(2);
+        set.add(9);
+        System.out.println("Custom Sorted Set: " + set); // [9, 5, 2]
+    }
+}
+
+Priority Queue with Custom Sorting :
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        // Min-heap (default)
+        PriorityQueue<Integer> minHeap = new PriorityQueue<>();
+        minHeap.add(5);
+        minHeap.add(2);
+        minHeap.add(9);
+        System.out.println("Min-Heap: " + minHeap.poll()); // 2
+        
+        // Max-heap (custom)
+        PriorityQueue<Integer> maxHeap = new PriorityQueue<>((a, b) -> b - a);
+        maxHeap.add(5);
+        maxHeap.add(2);
+        maxHeap.add(9);
+        System.out.println("Max-Heap: " + maxHeap.poll()); // 9
+        
+        // PriorityQueue of arrays (sort by 2nd element)
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> a[1] - b[1]);
+        pq.add(new int[]{1, 5});
+        pq.add(new int[]{2, 3});
+        pq.add(new int[]{3, 7});
+        System.out.println("Array PQ: " + Arrays.toString(pq.poll())); // [2, 3]
+    }
+}
+
+Sorting a Map by Key/Value :
+import java.util.*;
+import java.util.stream.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Map<String, Integer> map = new HashMap<>();
+        map.put("Alice", 25);
+        map.put("Bob", 20);
+        map.put("Charlie", 30);
+        
+        // Sort by key (name)
+        Map<String, Integer> sortedByName = map.entrySet().stream()
+            .sorted((e1, e2) -> e1.getKey().compareTo(e2.getKey()))
+            .collect(Collectors.toMap(
+                Map.Entry::getKey,
+                Map.Entry::getValue,
+                (a, b) -> a,
+                LinkedHashMap::new
+            ));
+        System.out.println("Sorted by name: " + sortedByName); // {Alice=25, Bob=20, Charlie=30}
+        
+        // Sort by value (age)
+        Map<String, Integer> sortedByAge = map.entrySet().stream()
+            .sorted((e1, e2) -> e1.getValue() - e2.getValue())
+            .collect(Collectors.toMap(
+                Map.Entry::getKey,
+                Map.Entry::getValue,
+                (a, b) -> a,
+                LinkedHashMap::new
+            ));
+        System.out.println("Sorted by age: " + sortedByAge); // {Bob=20, Alice=25, Charlie=30}
+    }
+}
+
+Reverse Order Comparator :
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        List<Integer> numbers = Arrays.asList(5, 2, 9, 1);
+        
+        // Using Collections.reverseOrder()
+        numbers.sort(Collections.reverseOrder());
+        System.out.println("Reverse order: " + numbers); // [9, 5, 2, 1]
+        
+        // Using lambda
+        numbers.sort((a, b) -> b.compareTo(a));
+        System.out.println("Reverse lambda: " + numbers); // [9, 5, 2, 1]
+    }
+}
+
+Sorting a List<int[]> (Multiple Columns) :
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        List<int[]> list = new ArrayList<>();
+        list.add(new int[]{3, 20});
+        list.add(new int[]{1, 30});
+        list.add(new int[]{1, 10});
+        list.add(new int[]{2, 15});
+
+        // Sort by 1st column (asc), then 2nd column (desc)
+        list.sort((a, b) -> {
+            if (a[0] != b[0]) {
+                return a[0] - b[0]; // 1st column ascending
+            } else {
+                return b[1] - a[1]; // 2nd column descending
+            }
+        });
+
+        // Print sorted list
+        for (int[] arr : list) {
+            System.out.println(Arrays.toString(arr));
+        }
+        /* Output:
+           [1, 30]
+           [1, 10]
+           [2, 15]
+           [3, 20]
+        */
+    }
+}
+
+Sorting a List<String[]> (Multiple Columns) :
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        List<String[]> list = new ArrayList<>();
+        list.add(new String[]{"Bob", "25"});
+        list.add(new String[]{"Alice", "30"});
+        list.add(new String[]{"Alice", "20"});
+
+        // Sort by name (asc), then age (desc)
+        list.sort((a, b) -> {
+            int nameCompare = a[0].compareTo(b[0]);
+            if (nameCompare != 0) {
+                return nameCompare;
+            } else {
+                return Integer.compare(Integer.parseInt(b[1]), Integer.parseInt(a[1]));
+            }
+        });
+
+        // Print sorted list
+        for (String[] arr : list) {
+            System.out.println(Arrays.toString(arr));
+        }
+        /* Output:
+           [Alice, 30]
+           [Alice, 20]
+           [Bob, 25]
+        */
+    }
+}
+
+PriorityQueue of Arrays (Custom Multi-Column Order) :
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        // Max-Heap by 1st column, Min-Heap by 2nd column
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> {
+            if (a[0] != b[0]) {
+                return b[0] - a[0]; // 1st column (descending)
+            } else {
+                return a[1] - b[1];  // 2nd column (ascending)
+            }
+        });
+
+        pq.add(new int[]{3, 20});
+        pq.add(new int[]{1, 30});
+        pq.add(new int[]{1, 10});
+        pq.add(new int[]{2, 15});
+
+        while (!pq.isEmpty()) {
+            System.out.println(Arrays.toString(pq.poll()));
+        }
+        /* Output:
+           [3, 20]
+           [2, 15]
+           [1, 10]
+           [1, 30]
+        */
+    }
+}
+
+
 -------------------------------------------------------------------
 
 Access Modifiers (Control Visibility)

@@ -784,38 +784,633 @@ Encapsulation, Abstraction, Polymorphism, Inheritance
 Design Patterns (Gang of Four)
 
 Creational (Singleton, Factory, Builder, Prototype)
-
 Structural (Adapter, Decorator, Proxy, Facade)
-
 Behavioral (Observer, Strategy, Command, State)
 
 Database Schema Design
 
-Normalization (1NF, 2NF, 3NF, BCNF)
+Normalization (1NF, 2NF, 3NF, BCNF) :
+Normalization is a crucial concept in database design that helps eliminate redundancy and maintain data integrity. For system design interviews, you'll need to understand the different normal forms and when to apply them. Here's a breakdown of the key normalization forms:
 
-Indexing (B-Tree, Hash Index)
+1NF (First Normal Form)
+Requirements:
 
-Transactions (ACID Properties)
+Each table cell should contain a single value (atomic values)
 
-Concurrency & Multithreading
+Each record needs to be unique (no duplicate rows)
 
-Thread vs Process
+Values stored in a column should be of the same domain
 
-Deadlock & Race Conditions
+Example Problem:
 
-Synchronization (Locks, Semaphores, Mutex)
+Copy
+Orders Table:
+OrderID | Products
+--------|---------
+1       | Laptop, Mouse
+2       | Monitor
+1NF Solution:
 
-Common LLD Problems
+Copy
+Orders Table:
+OrderID | Product
+--------|--------
+1       | Laptop
+1       | Mouse
+2       | Monitor
+2NF (Second Normal Form)
+Requirements:
 
-Design Parking Lot
+Must be in 1NF
 
-Design Snake & Ladder Game
+All non-key attributes must depend on the entire primary key (no partial dependency)
 
-Design Splitwise
+Example Problem (in 1NF but not 2NF):
 
-Design ATM Machine
+Copy
+OrderDetails:
+OrderID | ProductID | ProductName | Quantity
+--------|-----------|-------------|---------
+1       | 101       | Laptop      | 1
+1       | 102       | Mouse       | 2
+2       | 101       | Laptop      | 1
+2NF Solution:
+Split into two tables to remove partial dependency (ProductName only depends on ProductID, not OrderID):
 
-Design Elevator System
+Copy
+OrderItems:
+OrderID | ProductID | Quantity
+--------|-----------|---------
+1       | 101       | 1
+1       | 102       | 2
+2       | 101       | 1
+
+Products:
+ProductID | ProductName
+----------|------------
+101       | Laptop
+102       | Mouse
+3NF (Third Normal Form)
+Requirements:
+
+Must be in 2NF
+
+No transitive dependencies (non-key attributes shouldn't depend on other non-key attributes)
+
+Example Problem (in 2NF but not 3NF):
+
+Copy
+Orders:
+OrderID | CustomerID | CustomerName | CustomerAddress
+--------|------------|--------------|----------------
+1       | C001       | John Doe     | 123 Main St
+2       | C002       | Jane Smith   | 456 Oak Ave
+3NF Solution:
+Split into two tables to remove transitive dependency (CustomerName and CustomerAddress depend on CustomerID, not OrderID):
+
+Copy
+Orders:
+OrderID | CustomerID
+--------|------------
+1       | C001
+2       | C002
+
+Customers:
+CustomerID | CustomerName | CustomerAddress
+-----------|--------------|----------------
+C001       | John Doe     | 123 Main St
+C002       | Jane Smith   | 456 Oak Ave
+BCNF (Boyce-Codd Normal Form)
+Requirements:
+
+Must be in 3NF
+
+For any non-trivial dependency X → Y, X must be a superkey (a set of attributes that can uniquely identify a row)
+
+Example Problem (in 3NF but not BCNF):
+Consider a classroom scenario where:
+
+A student can be in multiple classes
+
+A class has multiple students
+
+Each class has one teacher
+
+A teacher can teach multiple classes
+
+For each student, their teacher is determined by their class
+
+Copy
+Enrollments:
+StudentID | ClassID | TeacherID
+----------|---------|----------
+S1        | C1      | T1
+S1        | C2      | T2
+S2        | C1      | T1
+Here, the functional dependencies are:
+
+(StudentID, ClassID) → TeacherID
+
+ClassID → TeacherID
+
+BCNF Solution:
+Split into two tables to ensure all determinants are superkeys:
+
+Copy
+StudentClasses:
+StudentID | ClassID
+----------|---------
+S1        | C1
+S1        | C2
+S2        | C1
+
+ClassTeachers:
+ClassID | TeacherID
+--------|----------
+C1      | T1
+C2      | T2
+Interview Tips
+When to normalize:
+When you need to minimize redundancy
+When data integrity is critical
+For OLTP systems (transaction-heavy)
+
+When to denormalize:
+For read-heavy systems (OLAP)
+When performance is more critical than storage
+For analytical queries that join many tables
+
+Common interview questions:
+"Design a database schema for X system" (then discuss normalization)
+"How would you improve this existing schema?"
+"What are the tradeoffs between normalization levels?"
+
+Remember that in real-world system design, you often stop at 3NF unless you have very specific requirements that demand BCNF. The tradeoff between normalization and performance is a common discussion point in interviews.
+
+
+Indexing (B-Tree, Hash Index) :
+ndexing is a critical database optimization technique that speeds up data retrieval operations. Understanding different indexing methods is essential for system design interviews.
+
+Why Indexing Matters
+Indexes are like the table of contents in a book - they allow the database to find data without scanning every row. Proper indexing can make queries orders of magnitude faster, while poor indexing can slow down write operations unnecessarily.
+
+B-Tree Index (Balanced Tree)
+What it is:
+
+The most common index type in relational databases
+
+Self-balancing tree structure that maintains sorted data
+
+Allows searches, sequential access, insertions, and deletions in O(log n) time
+
+Structure:
+
+Copy
+       [Root Node: 20, 40]
+        /      |       \
+[<20]  [20-40]  [>40]
+Characteristics:
+
+Each node contains multiple keys and pointers
+
+All leaves are at the same level (balanced)
+
+Data is stored in sorted order
+
+Supports range queries (>, <, BETWEEN) efficiently
+
+Use Cases:
+
+Default index type in most databases (MySQL InnoDB, PostgreSQL)
+
+Columns frequently used in WHERE clauses
+
+Columns used in JOIN, ORDER BY, or GROUP BY operations
+
+Example:
+
+sql
+Copy
+-- Creating a B-tree index
+CREATE INDEX idx_customer_name ON customers(last_name);
+
+-- Query that would use this index
+SELECT * FROM customers WHERE last_name = 'Smith';
+Hash Index
+What it is:
+
+Uses a hash table structure
+
+Maps keys to specific locations via a hash function
+
+Provides O(1) lookup time for exact matches
+
+Structure:
+
+Copy
+Hash Buckets:
+[0] -> (key1, value1) -> (key4, value4)
+[1] -> (key2, value2)
+[2] -> (key3, value3)
+Characteristics:
+
+Extremely fast for equality comparisons (=)
+
+Doesn't support range queries
+
+Requires exact matches
+
+Performance depends on hash function quality
+
+Use Cases:
+
+In-memory databases (Redis, Memcached)
+
+Exact match lookups (primary key access)
+
+Temporary tables or join operations
+
+Example:
+
+sql
+Copy
+-- MySQL MEMORY storage engine uses hash indexes by default
+CREATE TABLE session_data (
+    session_id CHAR(32) PRIMARY KEY,
+    user_data TEXT
+) ENGINE=MEMORY;
+
+-- Fast lookup by exact session_id
+SELECT * FROM session_data WHERE session_id = 'abc123';
+Comparison: B-Tree vs. Hash Index
+Feature	B-Tree Index	Hash Index
+Query Support	Range, equality, sorting	Only equality
+Time Complexity	O(log n)	O(1) for perfect hashes
+Space Overhead	Moderate	Low to moderate
+Update Cost	Moderate	Low
+Common Uses	General purpose	Exact match lookups
+Database Examples	MySQL InnoDB, PostgreSQL	MySQL MEMORY, Redis
+Interview Considerations
+When to use which index:
+
+Use B-Tree for most general cases (supports more operations)
+Use Hash for exact-match lookups when range queries aren't needed
+Tradeoffs to discuss:
+Indexes speed up reads but slow down writes (inserts/updates/deletes)
+Additional storage space required
+Maintenance overhead
+
+Common interview questions:
+"How would you optimize this slow query?"
+"What columns would you index in this schema?"
+"Explain how a database finds records with and without an index"
+
+Advanced topics to know:
+Composite indexes (multi-column indexes)
+Covering indexes (when the index contains all needed data)
+Clustered vs. non-clustered indexes
+Index selectivity (how unique values are in an index)
+
+Transactions (ACID Properties) :
+Transactions are fundamental to database systems, ensuring data integrity even in cases of system failures or concurrent access. The ACID properties define the key characteristics of reliable transactions.
+
+What is a Transaction?
+A transaction is a sequence of operations performed as a single logical unit of work that must either:
+
+Complete entirely (all operations succeed), or
+
+Have no effect at all (as if none of the operations happened)
+
+Example:
+
+sql
+Copy
+BEGIN TRANSACTION;
+  UPDATE accounts SET balance = balance - 100 WHERE account_id = 'A';
+  UPDATE accounts SET balance = balance + 100 WHERE account_id = 'B';
+COMMIT;
+ACID Properties
+1. Atomicity
+Definition: The transaction is treated as a single "unit" - either all of its operations complete, or none do.
+
+Key Points:
+
+Implemented using transaction logs (undo/redo logs)
+
+If any operation fails, the entire transaction is rolled back
+
+Ensures there are no partial updates
+
+Example: In a funds transfer, if the debit succeeds but the credit fails, the debit is rolled back.
+
+2. Consistency
+Definition: A transaction brings the database from one valid state to another, maintaining all defined rules (constraints, cascades, triggers).
+
+Key Points:
+
+Database constraints (PK, FK, unique, checks) must remain valid
+
+Application-level invariants must be preserved
+
+If a transaction would violate consistency, it's aborted
+
+Example: A transaction can't leave a "balance" field negative if there's a CHECK(balance >= 0) constraint.
+
+3. Isolation
+Definition: Concurrent transactions execute as if they were serial (one after another), preventing interference.
+
+Key Points:
+
+Implemented via locking or multi-version concurrency control (MVCC)
+
+Isolation levels control the degree of isolation (with performance tradeoffs)
+
+Prevents dirty reads, non-repeatable reads, and phantom reads
+
+Common Isolation Levels:
+
+Read Uncommitted - Lowest isolation, can read uncommitted changes (dirty reads)
+
+Read Committed - Only see committed changes (default in many databases)
+
+Repeatable Read - Same read returns same result within transaction
+
+Serializable - Highest isolation, transactions appear to execute serially
+
+4. Durability
+Definition: Once a transaction is committed, its effects persist even in case of system failure.
+
+Key Points:
+
+Achieved through write-ahead logging (WAL)
+
+Committed data is written to persistent storage
+
+Survives power outages, crashes, etc.
+
+Example: After you get a "Transfer Successful" message, the bank can't lose that transaction.
+
+Transaction States
+Copy
+        Begin
+          ↓
+      Active
+     /      \
+  Failed   Committed
+    ↓
+  Aborted
+Interview Considerations
+Implementation Questions:
+
+1. Implementing Transactions in Distributed Systems
+Approaches:
+
+Two-Phase Commit (2PC):
+
+mermaid
+Copy
+graph TD
+  A[Coordinator] -->|Prepare| B[Participant 1]
+  A -->|Prepare| C[Participant 2]
+  B -->|Vote| A
+  C -->|Vote| A
+  A -->|Commit/Rollback| B
+  A -->|Commit/Rollback| C
+Coordinator first sends "prepare" to all participants
+
+Participants lock resources and vote (Yes/No)
+
+If all vote Yes, coordinator sends "commit"
+
+Saga Pattern (for long-running transactions):
+
+Break transaction into smaller sub-transactions
+
+Each sub-transaction has a compensating action
+
+Example: e-commerce order (reserve inventory → charge card → ship)
+
+Tradeoffs:
+
+2PC provides ACID but blocks during failures
+
+Saga is more scalable but requires compensation logic
+
+2. 2PC vs 2PL
+Two-Phase Commit (2PC)	Two-Phase Locking (2PL)
+Purpose	Atomic commit across nodes	Concurrency control
+Phases	1. Prepare 2. Commit/Rollback	1. Growing (acquire locks) 2. Shrinking (release locks)
+Used in	Distributed transactions	Single-node transaction systems
+Failure Handling	Blocks if coordinator fails	Deadlocks possible
+Example	Updating bank balance across DCs	Preventing dirty reads in MySQL
+3. Achieving Durability
+Methods:
+
+Write-Ahead Logging (WAL):
+
+All changes logged to disk before applying to data files
+
+Example: PostgreSQL's WAL, MySQL's InnoDB redo log
+
+Shadow Paging:
+
+Maintains two page tables (current and shadow)
+
+Atomic switches between them (used in SQLite)
+
+Replication:
+
+Synchronous replication to multiple nodes
+
+Example: MongoDB's write concern "majority"
+
+Key Techniques:
+
+fsync() calls to force OS buffer flush to disk
+
+Checksums to detect corruption (ZFS, Cassandra)
+
+Battery-backed write cache in enterprise storage
+
+Interview Tip: Mention that durability often involves tradeoffs between write speed and safety (e.g., MongoDB's journaling vs writeConcern settings).
+
+Tradeoffs:
+
+Higher isolation levels reduce concurrency
+
+Strict ACID compliance can limit scalability
+
+NoSQL systems often sacrifice some ACID properties for performance
+
+Real-world Examples:
+
+Banking systems require strong ACID compliance
+
+Shopping cart checkouts need transaction support
+
+Social media feeds might tolerate weaker consistency
+
+CAP Theorem Connection:
+
+ACID databases typically favor CP (Consistency and Partition tolerance)
+
+Discuss when you might relax ACID requirements for availability
+
+Common Interview Questions
+"How would you design a payment system that maintains balance consistency?"
+
+"What isolation level would you choose for an e-commerce inventory system?"
+
+"Explain how you'd handle a transaction that fails halfway through."
+
+"How do NoSQL systems handle transactions differently than SQL systems?"
+
+
+
+Concurrency & Multithreading :
+Concurrency and multithreading are fundamental concepts for building high-performance systems. Here's what you need to know for system design interviews:
+
+Core Concepts
+Concurrency - The ability of a system to handle multiple tasks in overlapping time periods (not necessarily simultaneously)
+
+Parallelism - Actually executing multiple tasks simultaneously (requires multiple CPU cores)
+
+Thread - The smallest sequence of programmed instructions that can be managed independently by a scheduler
+
+Key Challenges in Multithreading
+Race Conditions
+
+When multiple threads access shared data and try to change it simultaneously
+
+Example: Two threads incrementing the same counter without synchronization
+
+Deadlocks
+
+When two or more threads are blocked forever waiting for each other
+
+Classic example (Four necessary conditions):
+
+Mutual exclusion
+
+Hold and wait
+
+No preemption
+
+Circular wait
+
+Starvation
+
+When a thread is perpetually denied access to resources
+
+Synchronization Mechanisms
+1. Locks/Mutexes
+python
+Copy
+lock = threading.Lock()
+
+def thread_safe_function():
+    with lock:
+        # Critical section
+        shared_variable += 1
+2. Semaphores
+python
+Copy
+semaphore = threading.Semaphore(3)  # Allow 3 threads at once
+
+def limited_access_function():
+    with semaphore:
+        # Only 3 threads can execute this at once
+3. Monitors
+Higher-level synchronization construct that combines mutual exclusion with condition variables
+
+4. Atomic Operations
+java
+Copy
+AtomicInteger counter = new AtomicInteger(0);
+
+void increment() {
+    counter.incrementAndGet();  // Thread-safe without explicit locking
+}
+Common Patterns
+1. Producer-Consumer
+mermaid
+Copy
+graph LR
+    P[Producer Threads] -->|Put items| B[Blocking Queue]
+    B -->|Take items| C[Consumer Threads]
+2. Thread Pools
+Reuse a fixed number of threads to execute tasks
+
+Avoids thread creation/destruction overhead
+
+3. Read-Write Locks
+Multiple readers or single writer
+
+Improves performance for read-heavy workloads
+
+Interview Considerations
+Performance vs. Correctness
+
+"How would you optimize this concurrent code?"
+
+"What tradeoffs would you make between throughput and safety?"
+
+System Design Questions
+
+"Design a web server that handles multiple requests"
+
+"How would you implement a rate limiter?"
+
+Troubleshooting
+
+"This code has a race condition - how would you fix it?"
+
+"How would you debug a deadlock?"
+
+Modern Approaches
+
+Async/await (coroutines)
+
+Actor model (Akka, Erlang)
+
+Software Transactional Memory
+
+Example Interview Question
+"Design a thread-safe counter that can be incremented by multiple threads"
+
+Solution:
+
+java
+Copy
+public class ThreadSafeCounter {
+    private AtomicInteger count = new AtomicInteger(0);
+    
+    public void increment() {
+        count.incrementAndGet();
+    }
+    
+    public int getCount() {
+        return count.get();
+    }
+}
+Key points to discuss:
+
+Why AtomicInteger instead of synchronized?
+
+Tradeoffs of different implementations
+
+Performance implications under high contention
+
+Remember to discuss:
+
+Thread safety guarantees
+
+Memory visibility (volatile, happens-before)
+
+Performance considerations
+
+Alternative approaches
+
 
 4. Step-by-Step Approach for Solving Design Problems
 
@@ -828,6 +1423,169 @@ High-Level Architecture (Components, Data Flow)
 Deep Dive (Caching, Load Balancing, Fault Tolerance)
 Identify Bottlenecks (Optimize where needed)
 
+1. Clarify Requirements
+Goal: Understand the problem scope, constraints, and edge cases.
+Key Questions:
+
+Functional Requirements:
+
+What are the core features? (e.g., "Is this a read-heavy or write-heavy system?")
+
+What are the input/output expectations? (e.g., "What data does the API need to return?")
+
+Are there any special constraints? (e.g., "Does it need real-time updates?")
+
+Non-Functional Requirements:
+
+What’s the expected availability (99.9% SLA?) and latency (p99 < 200ms)?
+
+How important is consistency vs. availability (CAP tradeoffs)?
+
+Any security or compliance requirements (GDPR, encryption)?
+
+Example:
+
+For a URL shortener:
+
+"Should the short links expire?"
+
+"Do we need analytics for clicks?"
+
+2. Estimate Scale (Traffic, Storage, Bandwidth)
+Goal: Calculate rough numbers to guide design decisions.
+Key Questions:
+
+Traffic Estimates:
+
+What’s the QPS (Queries Per Second) for reads/writes?
+
+What’s the peak traffic (e.g., 10x average during spikes)?
+
+Storage Estimates:
+
+How much data per entity? (e.g., "Each URL mapping is 500 bytes")
+
+Total storage after 5 years? (Include growth rate.)
+
+Bandwidth:
+
+Data transfer per request/response (e.g., "1 KB per shortened URL request").
+
+Example Calculation:
+
+If you have 1M daily active users (DAU) with 10 requests/user/day:
+
+QPS = (1M × 10) / 86400 ≈ 116 QPS
+
+Storage: 1M new URLs/day × 500 bytes = 500 MB/day → ~180 GB/year.
+
+3. Define APIs
+Goal: Specify how clients interact with the system.
+Key Questions:
+
+What are the endpoints and their methods (GET/POST/PUT/DELETE)?
+
+What’s the request/response schema? (JSON/Protobuf?)
+
+Are there rate limits or authentication requirements?
+
+Example for a URL Shortener:
+
+rest
+Copy
+POST /api/shorten  
+Request: { "original_url": "https://example.com/very-long-path" }  
+Response: { "short_url": "https://short.ly/abc123" }  
+
+GET /abc123  
+Response: 302 Redirect to original URL  
+4. Database Design
+Goal: Choose DB type, schema, and scaling strategy.
+Key Questions:
+
+SQL vs. NoSQL? (Need transactions? Flexible schema?)
+
+Tables/Collections: What’s the schema? (e.g., short_urls(id, original_url, user_id, expires_at))
+
+Indexes: What queries need optimization? (e.g., INDEX ON short_code).
+
+Sharding/Partitioning: How to scale? (e.g., shard by short_code hash).
+
+Example:
+
+For a Twitter-like system:
+
+Tweets table (sharded by user_id).
+
+Secondary indexes for trending hashtags.
+
+5. High-Level Architecture (Components, Data Flow)
+Goal: Draw the system’s major components and interactions.
+Key Questions:
+
+What are the core services? (e.g., API servers, DB, cache, queue).
+
+How do they communicate? (REST/RPC/event-driven?).
+
+Any third-party services? (CDN, Auth, Payment).
+
+Example Diagram:
+
+Copy
+Client → Load Balancer → API Servers → Cache (Redis) → Database (PostgreSQL)  
+                         ↓  
+                     Async Queue (Kafka) → Analytics Service  
+6. Deep Dive (Caching, Load Balancing, Fault Tolerance)
+Goal: Optimize critical paths and ensure reliability.
+Key Questions:
+
+Caching:
+
+What to cache? (e.g., "Top 10% of URLs get 90% traffic").
+
+Cache eviction policy? (LRU/LFU).
+
+Load Balancing:
+
+Round-robin, least connections, or consistent hashing?
+
+Fault Tolerance:
+
+How to handle DB failures? (Read replicas? Multi-region?).
+
+Retry strategies for failed requests?
+
+Example:
+
+Use Redis for caching hot URLs with 5-minute TTL.
+
+Multi-AZ DB deployments with failover.
+
+7. Identify Bottlenecks & Optimize
+Goal: Find and resolve scalability limits.
+Key Questions:
+
+Where is the slowest part of the system? (DB? Network?).
+
+How to reduce latency? (Edge caching, DB read replicas).
+
+How to handle traffic spikes? (Auto-scaling, throttling).
+
+Example Optimizations:
+
+Database: Add read replicas for heavy read loads.
+
+Network: Use a CDN for static assets.
+
+Cost: Move cold data to S3/archive storage.
+
+Bonus: Questions to Ask the Interviewer
+"Are there any specific scalability goals we should prioritize?"
+
+"Should we optimize for consistency or availability in this scenario?"
+
+"Are there legacy systems we need to integrate with?"
+
 For LLD
 Identify Core Classes & Objects
 Define Relationships (Inheritance, Composition)
@@ -835,6 +1593,173 @@ Design Methods & Attributes
 Consider Edge Cases
 Apply Design Patterns if Needed
 Discuss Thread Safety (if applicable)
+
+For Object-Oriented Design (OOD) and LLD interviews, follow this structured approach to design scalable, maintainable, and efficient systems.
+
+1. Identify Core Classes & Objects
+Goal: Break down the system into key classes and objects.
+Key Questions:
+
+What are the main entities in the system? (e.g., User, Order, Payment)
+
+What are their responsibilities? (e.g., Order manages items, Payment processes transactions)
+
+Should we use abstract classes/interfaces for extensibility?
+
+Example (Parking Lot System):
+
+java
+Copy
+class ParkingLot { ... }  
+class ParkingSpot { ... }  
+class Vehicle { ... }  
+class Ticket { ... }  
+class PaymentProcessor { ... }  
+2. Define Relationships (Inheritance, Composition, Aggregation)
+Goal: Establish how classes interact.
+Key Questions:
+
+Inheritance (IS-A): Should Car and Bike extend Vehicle?
+
+Composition (HAS-A): Does ParkingLot contain ParkingSpot?
+
+Aggregation (Weak HAS-A): Does User have a List<Order>?
+
+Example:
+
+java
+Copy
+// Inheritance  
+class Car extends Vehicle { ... }  
+
+// Composition (ParkingLot owns ParkingSpots)  
+class ParkingLot {  
+    private List<ParkingSpot> spots;  
+}  
+
+// Aggregation (User has Orders, but Orders can exist independently)  
+class User {  
+    private List<Order> orders;  
+}  
+3. Design Methods & Attributes
+Goal: Define class behaviors and properties.
+Key Questions:
+
+What attributes does each class need? (e.g., Vehicle has licensePlate)
+
+What methods should each class expose? (e.g., ParkingLot.assignSpot())
+
+Should methods be public/private/protected?
+
+Example (Parking Lot):
+
+java
+Copy
+class ParkingSpot {  
+    private int spotId;  
+    private boolean isOccupied;  
+    private Vehicle parkedVehicle;  
+
+    public boolean isAvailable() { ... }  
+    public void assignVehicle(Vehicle v) { ... }  
+    public void freeSpot() { ... }  
+}  
+4. Consider Edge Cases
+Goal: Handle unexpected scenarios gracefully.
+Key Questions:
+
+What if the parking lot is full?
+
+What if payment fails after spot assignment?
+
+What if multiple threads try to book the same spot?
+
+Example Solutions:
+
+Throw ParkingFullException when no spots left.
+
+Use a state pattern for Ticket (e.g., UNPAID, PAID, EXPIRED).
+
+Implement thread-safe spot allocation (e.g., synchronized methods).
+
+5. Apply Design Patterns (If Needed)
+Goal: Improve flexibility and maintainability.
+Common Patterns:
+
+Pattern	When to Use	Example
+Singleton	Single global instance (e.g., DatabaseConnection)	ParkingLot.getInstance()
+Factory	Create objects without exposing logic	VehicleFactory.createVehicle(type)
+Strategy	Switch algorithms at runtime	PaymentProcessor.setStrategy(CreditCard)
+Observer	Notify multiple objects on changes	ParkingLot.notifyWhenSpotFreed()
+Example (Strategy Pattern for Payments):
+
+java
+Copy
+interface PaymentStrategy {  
+    boolean pay(double amount);  
+}  
+
+class CreditCardPayment implements PaymentStrategy { ... }  
+class UpiPayment implements PaymentStrategy { ... }  
+
+class PaymentProcessor {  
+    private PaymentStrategy strategy;  
+    public void setStrategy(PaymentStrategy s) { ... }  
+    public boolean processPayment(double amount) {  
+        return strategy.pay(amount);  
+    }  
+}  
+6. Discuss Thread Safety (If Applicable)
+Goal: Ensure correctness in multi-threaded environments.
+Key Questions:
+
+Which shared resources need protection? (e.g., availableSpots list)
+
+Should we use locks, synchronized, or concurrent collections?
+
+Can we minimize locking for better performance?
+
+Example (Thread-Safe Parking Spot Allocation):
+
+java
+Copy
+class ParkingLot {  
+    private List<ParkingSpot> spots;  
+    private ReentrantLock lock = new ReentrantLock();  
+
+    public ParkingSpot assignSpot(Vehicle v) {  
+        lock.lock();  
+        try {  
+            for (ParkingSpot spot : spots) {  
+                if (spot.isAvailable()) {  
+                    spot.assignVehicle(v);  
+                    return spot;  
+                }  
+            }  
+            throw new ParkingFullException();  
+        } finally {  
+            lock.unlock();  
+        }  
+    }  
+}  
+Bonus: Common LLD Interview Questions
+"Design a Thread-Safe HashMap"
+
+Discuss synchronization vs. ConcurrentHashMap.
+
+"Design an Elevator System"
+
+Use state pattern for elevator states (MOVING, IDLE).
+
+"Design a Restaurant Reservation System"
+
+Handle concurrent bookings with optimistic locking.
+
+Key Takeaways
+✅ Start with core classes & relationships
+✅ Define clear methods & attributes
+✅ Handle edge cases & thread safety
+✅ Apply design patterns where useful
 
 
 6. Revision Checklist
