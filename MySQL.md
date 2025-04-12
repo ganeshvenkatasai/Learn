@@ -1,4 +1,4 @@
-# MySQL Complete Query Cheat Sheet
+# MySQL
 
 ## Database Operations
 - `CREATE DATABASE dbname;` - Create new database
