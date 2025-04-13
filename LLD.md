@@ -1,5 +1,5 @@
 
-
+```
 Class Diagram :
 
 A class diagram consists of:
@@ -21,6 +21,9 @@ Access Modifiers:
 ------------------------
 | + method1(): Return  |
 ------------------------
+
+
+```
 
 
 
