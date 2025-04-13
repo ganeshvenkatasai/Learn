@@ -1,3 +1,4 @@
+```
 git init                                # Initialize a new Git repository in the current directory
 git clone <repo_url>                    # Clone an existing repository from a remote source
 
@@ -63,3 +64,4 @@ git reset --hard HEAD~1    # Remove last commit and discard all changes
 git reset --soft HEAD~1    # Remove last commit but keep changes unstaged  
 git reset --mixed HEAD~1   # Remove last commit but keep changes staged  
 git revert HEAD            # Create a new commit that undoes the last commit
+```
