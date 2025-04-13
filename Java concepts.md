@@ -1,3 +1,4 @@
+```
 1️⃣ Core Java (Must-Know Basics)
 ✅ Data Types & Variables
 ✅ Operators (Arithmetic, Logical, Bitwise, etc.)
@@ -79,5 +80,6 @@
 ✅ Reactive Programming (Project Reactor, WebFlux)
 ✅ GraphQL in Java
 ✅ Performance Optimization & Profiling (JProfiler, VisualVM)
+```
 
 
