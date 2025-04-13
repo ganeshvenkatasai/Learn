@@ -1,11 +1,14 @@
 # HTML5 Basics
+```
 - <!DOCTYPE html>: Declares the document as HTML5.
 - <html>: Root element of an HTML page.
 - <head>: Contains meta-information about the document.
 - <title>: Specifies the title shown in browser tabs.
 - <body>: Contains the visible page content.
+```
 
 # Semantic Elements
+```
 - <header>: Represents introductory content or navigation.
 - <nav>: Defines navigation links.
 - <main>: Contains the dominant content of the document.
@@ -13,8 +16,9 @@
 - <section>: Thematic grouping of content.
 - <aside>: Content indirectly related to main content (sidebars).
 - <footer>: Contains footer information (author, copyright).
-
+```
 # Text Formatting
+```
 - <h1> to <h6>: Heading levels (h1 most important).
 - <p>: Paragraph element.
 - <br>: Line break (void element).
@@ -24,8 +28,9 @@
 - <mark>: Highlighted text.
 - <small>: Side comments (small print).
 - <time>: Represents time/date (machine-readable).
-
+```
 # Links & Media
+```
 - <a>: Anchor element for hyperlinks (href attribute).
 - <img>: Embeds images (src, alt attributes required).
 - <video>: Embeds video content.
@@ -33,16 +38,18 @@
 - <source>: Specifies media resources for video/audio.
 - <figure>: Self-contained content (images, diagrams).
 - <figcaption>: Caption for <figure>.
-
+```
 # Lists
+```
 - <ul>: Unordered (bulleted) list.
 - <ol>: Ordered (numbered) list.
 - <li>: List item.
 - <dl>: Description list.
 - <dt>: Description term.
 - <dd>: Description details.
-
+```
 # Tables
+```
 - <table>: Creates a table.
 - <thead>: Groups header content in table.
 - <tbody>: Groups body content in table.
@@ -51,8 +58,9 @@
 - <th>: Table header cell.
 - <td>: Table data cell.
 - <caption>: Table title/description.
-
+```
 # Forms
+```
 - <form>: Container for form elements.
 - <input>: Form input field (type attribute defines kind).
 - <textarea>: Multi-line text input.
@@ -64,8 +72,9 @@
 - <legend>: Caption for <fieldset>.
 - <datalist>: Predefined options for input.
 - <output>: Result of calculation.
-
+```
 # Input Types
+```
 - text: Single-line text input.
 - password: Masked text input.
 - email: Email address input.
@@ -80,8 +89,9 @@
 - file: File upload.
 - submit: Form submission button.
 - reset: Resets form fields.
-
+```
 # Global Attributes
+```
 - class: Space-separated list of classes.
 - id: Unique identifier for element.
 - style: Inline CSS styling.
@@ -90,8 +100,9 @@
 - hidden: Hides element from display.
 - contenteditable: Makes element editable.
 - draggable: Specifies if element is draggable.
-
+```
 # HTML5 APIs
+```
 - Canvas API: Drawing graphics via JavaScript.
 - Geolocation API: Gets user's geographical position.
 - Web Storage: localStorage and sessionStorage.
@@ -100,8 +111,9 @@
 - Drag and Drop: Native drag-and-drop interface.
 - History API: Manipulates browser history.
 - File API: Handles file uploads and manipulation.
-
+```
 # Best Practices
+```
 - Semantic markup: Use proper elements for content.
 - Accessibility: Include alt text, ARIA attributes.
 - Responsive design: Use viewport meta tag.
@@ -109,3 +121,4 @@
 - Performance: Minimize DOM elements.
 - SEO: Use proper semantic structure.
 - Progressive enhancement: Basic functionality for all browsers.
+```
