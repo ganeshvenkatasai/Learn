@@ -1,6 +1,6 @@
 # HTML5 Basics
 ```
-**<!DOCTYPE html>**: Declares the document as HTML5.
+- <!DOCTYPE html>: Declares the document as HTML5.
 - <html>: Root element of an HTML page.
 - <head>: Contains meta-information about the document.
 - <title>: Specifies the title shown in browser tabs.
