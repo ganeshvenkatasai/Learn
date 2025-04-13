@@ -1,3 +1,4 @@
+```
 scalability, reliability, availability, latency
 CAP Theorem
 ACID vs BASE
@@ -1783,4 +1784,4 @@ Think Aloud (Explain your thought process)
 Optimize Later (First make it work, then improve)
 Ask Questions (Clarify constraints early)
 
-
+```
