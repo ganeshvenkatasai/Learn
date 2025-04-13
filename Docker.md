@@ -1,3 +1,4 @@
+```
 docker --version                        # Check installed Docker version
 docker info                             # Display system-wide Docker information
 
@@ -107,4 +108,6 @@ services:
       - pgdata:/var/lib/postgresql/data
 volumes:
   pgdata:
+  
+```
 
