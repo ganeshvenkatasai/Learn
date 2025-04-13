@@ -1,3 +1,4 @@
+```
 kubectl version                        # Check installed Kubernetes version
 kubectl cluster-info                   # Display cluster information
 kubectl get nodes                      # List all nodes in the cluster
@@ -156,3 +157,4 @@ spec:
                 port:
                   number: 80
 
+```
