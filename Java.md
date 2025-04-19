@@ -1079,6 +1079,9 @@ Default Values of Generic Data Types: Reference types (Objects, Classes):default
 Primitive wrapper types (Integer, Double, Boolean, etc.):Default value is also null because they are objects.
 Primitive types (int, double, boolean, etc.):Generics do not directly support primitives, but when using wrappers (Integer, Double), they default to null.
 
+Integer.MAX_VALUE
+Integer.MIN_VALUE
+
 
 ```
 
