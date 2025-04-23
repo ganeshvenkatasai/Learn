@@ -1082,6 +1082,8 @@ Primitive types (int, double, boolean, etc.):Generics do not directly support pr
 Integer.MAX_VALUE
 Integer.MIN_VALUE
 
+While Exceptions when giving multiple cache statements we have to give subclasses first and later we have to give their super classes in order
+
 
 ```
 
