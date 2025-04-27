@@ -78,8 +78,6 @@ class CustomException extends Exception{
     }
 }
 
-
-// Exceptions
 class Main {
     
     public void getException() throws CustomException{
@@ -108,3 +106,89 @@ class Main {
 }
 
 ```
+
+## String Methods :
+```
+length() - Returns the length of the string.
+charAt(int index) - Returns the character at the specified index.
+substring(int beginIndex) - Returns a substring from the specified start index.
+substring(int beginIndex, int endIndex) - Returns a substring from the start index to the end index.
+contains(CharSequence sequence) - Returns true if the string contains the specified sequence.
+equals(Object anObject) - Compares the string to the specified object for equality.
+equalsIgnoreCase(String anotherString) - Compares the string to the specified string, ignoring case.
+compareTo(String anotherString) - Compares the string to the specified string lexicographically.
+compareToIgnoreCase(String str) - Compares the string to the specified string, ignoring case, lexicographically.
+startsWith(String prefix) - Returns true if the string starts with the specified prefix.
+endsWith(String suffix) - Returns true if the string ends with the specified suffix.
+indexOf(int ch) - Returns the index of the first occurrence of the specified character.
+indexOf(String str) - Returns the index of the first occurrence of the specified substring.
+lastIndexOf(int ch) - Returns the index of the last occurrence of the specified character.
+lastIndexOf(String str) - Returns the index of the last occurrence of the specified substring.
+replace(char oldChar, char newChar) - Returns a new string with all occurrences of oldChar replaced by newChar.
+replace(CharSequence target, CharSequence replacement) - Replaces each substring of the string that matches the literal target with the specified replacement.
+replaceAll(String regex, String replacement) - Replaces each substring of the string that matches the regex with the specified replacement.
+replaceFirst(String regex, String replacement) - Replaces the first substring of the string that matches the regex with the specified replacement.
+toLowerCase() - Converts all characters in the string to lowercase.
+toUpperCase() - Converts all characters in the string to uppercase.
+trim() - Removes leading and trailing whitespace from the string.
+split(String regex) - Splits the string around matches of the given regular expression.
+split(String regex, int limit) - Splits the string around matches of the given regular expression, with a limit on the number of splits.
+concat(String str) - Concatenates the specified string to the end of the current string.
+join(CharSequence delimiter, CharSequence... elements) - Joins the given elements with the specified delimiter.
+valueOf(int i) - Returns the string representation of the specified integer.
+toCharArray() - Converts the string into a new character array.
+isEmpty() - Returns true if the string is empty (length is 0).
+matches(String regex) - Returns true if the string matches the specified regular expression.
+regionMatches(int toffset, String other, int ooffset, int len) - Tests if two string regions are equal.
+regionMatches(boolean ignoreCase, int toffset, String other, int ooffset, int len) - Tests if two string regions are equal, with an option to ignore case.
+contains(CharSequence sequence) - Checks if the string contains the specified sequence of characters.
+format(String format, Object... args) - Returns a formatted string using the specified format and arguments.
+getBytes() - Encodes the string into a sequence of bytes using the platform's default charset.
+getBytes(Charset charset) - Encodes the string into a sequence of bytes using the specified charset.
+toString() - Returns the string itself (overridden from Object).
+contentEquals(StringBuffer sb) - Compares the string to the specified StringBuffer for equality.
+StringBuilder (mutable strings): StringBuilder sb = new StringBuilder("Hello");
+String.format(): String formatted = String.format("Value: %d", 42);
+StringBuffer (synchronized mutable strings): StringBuffer sb = new StringBuffer("Hello");
+String Comparison: str1.equals(str2), str1.equalsIgnoreCase(str2)
+```
+
+## Modifiers :
+
+### Access Modifiers (Control Visibility)
+```
+public → Accessible from anywhere in the program.
+protected → Accessible within the same package and subclasses.
+private → Accessible only within the same class.
+(default / package-private) → Accessible only within the same package (no keyword needed).
+```
+
+### Non Access Modifiers (Modify Behavior)
+```
+static → Belongs to the class rather than an instance.
+final → Used for constants, preventing inheritance (class), and preventing method overriding.
+abstract → Used in abstract classes and methods without a body.
+synchronized → Used in multithreading to allow only one thread at a time.
+volatile → Ensures visibility of shared variables in multithreading.
+transient → Prevents a field from being serialized.
+strictfp → Ensures floating-point calculations follow IEEE precision rules.
+native → Used to call platform-specific (C/C++) code.
+```
+
+## Multithreading :
+
+## Custom Sorting :
+
+
+
+
+
+
+
+
+
+
+
+
+
+
