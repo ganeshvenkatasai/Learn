@@ -1,4 +1,47 @@
 
+## Order of Elements in a Java Class :
+```
+Package Statement
+Import Statements
+Class Declaration
+
+Constants (static final) # public static final int MAX_USERS = 1000;
+Static variables (static) # private static int totalUsers;
+Instance Variables (private first, then protected, then public)
+    Primitives (boolean, byte, short, int, long, float, double)
+    Immutable objects (`String`, `UUID`)
+    Collections (List, Set, Map)
+    Custom objects (Person, Address)
+
+Constructors (Default, Parameterized, Static Factory, Copy Constructor, Builder Pattern)
+Static Methods (Public, Private)
+Instance Methods (Public, Protected, Private)
+Override methods toString(), equals(), hashCode()
+Private helper methods last
+
+Inner Classes
+```
+
+## Rules of Elements in a Java Class :
+```
+Extends must come before implements.
+Only one class can be extended, but multiple interfaces can be implemented.
+Final classes cannot be extended.
+Final methods cannot be overridden.
+Interface methods are implicitly public abstract.
+Interface variables are implicitly public static final.
+Enum constants should be UPPER_CASE.
+Enum methods are at bottom.
+public enum Color {
+    RED, GREEN, BLUE;
+
+    public void display() {
+        System.out.println("Color: " + this);
+    }
+}
+```
+
+
 ## Java Collections Framework :
 ```
 1. List (Interface) - Implementations: ArrayList, LinkedList, Vector, Stack
@@ -177,8 +220,115 @@ native → Used to call platform-specific (C/C++) code.
 
 ## Multithreading :
 
+### Extend Thread Class
+
+```
+class Main{
+    public static void main(String[] args) {
+        MyThread t = new MyThread();
+        t.start();
+    }
+}
+
+public class MyThread extends Thread {
+    public void run(){
+        System.out.println("thread");
+    }
+}
+```
+
+### Implements Runnable Interface
+
+```
+class Main{
+    public static void main(String[] args) {
+        Thread t = new Thread(new MyRunnable());
+        t.start();
+    }
+}
+
+public class MyRunnable implements Runnable {
+    public void run(){
+        System.out.println("thread");
+    }
+}
+```
+
+### Synchronized Method
+
+```
+public synchronized void increment() {
+    count++;
+}
+```
+
+### Synchronized Block
+
+```
+private final Object lock = new Object();
+
+public void increment() {
+synchronized (lock) {
+    count++;
+}
+}
+```
+
+### Wait Notify 
+
+```
+class SharedBuffer {
+    private Queue<Integer> queue = new LinkedList<>();
+    private final int CAPACITY = 5;
+
+    public synchronized void produce(int item) throws InterruptedException {
+        while (queue.size() == CAPACITY) {
+            wait();
+        }
+        queue.add(item);
+        notify();
+    }
+
+    public synchronized int consume() throws InterruptedException {
+        while (queue.isEmpty()) {
+            wait();
+        }
+        int item = queue.poll();
+        notify();
+        return item;
+    }
+}
+```
+
+
+
 ## Custom Sorting :
 
+```
+List<Integer> numbers = new ArrayList<>();
+numbers.sort((a, b) -> b - a);
+
+class Person {
+    String name;
+    int age;
+}
+List<Person> people = new ArrayList<>();
+people.sort((p1, p2) -> p1.age - p2.age);
+
+Set<Integer> set = new TreeSet<>((a, b) -> b - a);
+
+PriorityQueue<Integer> maxHeap = new PriorityQueue<>((a, b) -> b - a);
+PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> a[1] - b[1]);
+
+List<int[]> list = new ArrayList<>();
+list.sort((a, b) -> {
+    if (a[0] != b[0]) {
+        return a[0] - b[0];
+    } else {
+        return b[1] - a[1];
+    }
+});
+```
 
 
 
