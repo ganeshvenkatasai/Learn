@@ -77,6 +77,7 @@ peekLast(): Retrieves the last element (returns null if empty).
 
 5. Map (Interface) - Implementations: HashMap, LinkedHashMap, TreeMap, Hashtable
 put(K key, V value): Adds or updates a key-value pair in the map.
+putIfAbsent(K key, V value): Adds key-value only if key is absent.
 get(Object key): Retrieves the value associated with the key.
 remove(Object key): Removes the key-value pair for the specified key.
 containsKey(Object key): Checks if the map contains the specified key.
@@ -194,6 +195,28 @@ StringBuilder (mutable strings): StringBuilder sb = new StringBuilder("Hello");
 String.format(): String formatted = String.format("Value: %d", 42);
 StringBuffer (synchronized mutable strings): StringBuffer sb = new StringBuffer("Hello");
 String Comparison: str1.equals(str2), str1.equalsIgnoreCase(str2)
+```
+
+## StringBuilder Methods :
+```
+StringBuilder() → Creates empty StringBuilder (capacity=16).
+StringBuilder(int capacity) → Creates empty StringBuilder with given capacity.
+StringBuilder(String str) → Creates StringBuilder initialized with str.
+append(x) → Appends x (any type) to the end.
+insert(int offset, x) → Inserts x at offset.
+delete(int start, int end) → Removes chars from start to end-1.
+deleteCharAt(int index) → Removes char at index.
+replace(int start, int end, String str) → Replaces substring with str.
+reverse() → Reverses the character sequence.
+setCharAt(int index, char ch) → Sets ch at index.
+substring(int start) → Returns substring from start to end.
+substring(int start, int end) → Returns substring from start to end-1.
+length() → Returns current length.
+capacity() → Returns current capacity.
+ensureCapacity(int min) → Ensures capacity ≥ min.
+trimToSize() → Reduces capacity to match length.
+toString() → Converts to String.
+chars() → Returns IntStream of characters.
 ```
 
 ## Modifiers :
