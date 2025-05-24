@@ -202,6 +202,7 @@ String Comparison: str1.equals(str2), str1.equalsIgnoreCase(str2)
 StringBuilder() → Creates empty StringBuilder (capacity=16).
 StringBuilder(int capacity) → Creates empty StringBuilder with given capacity.
 StringBuilder(String str) → Creates StringBuilder initialized with str.
+length() or capacity()
 append(x) → Appends x (any type) to the end.
 insert(int offset, x) → Inserts x at offset.
 delete(int start, int end) → Removes chars from start to end-1.
@@ -217,6 +218,8 @@ ensureCapacity(int min) → Ensures capacity ≥ min.
 trimToSize() → Reduces capacity to match length.
 toString() → Converts to String.
 chars() → Returns IntStream of characters.
+sb.setLength(0);  // Resets to "" (keeps capacity) // reuses buffer without reallocation
+sb = new StringBuilder();  // Fresh empty instance // if memory optimization is needed
 ```
 
 ## Modifiers :
