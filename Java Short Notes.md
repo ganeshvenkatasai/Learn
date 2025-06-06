@@ -331,6 +331,8 @@ class SharedBuffer {
 ## Custom Sorting :
 
 ```
+Arrays.sort(arr);
+
 List<Integer> numbers = new ArrayList<>();
 numbers.sort((a, b) -> b - a);
 
